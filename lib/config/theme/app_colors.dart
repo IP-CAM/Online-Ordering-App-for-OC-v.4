@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ordering_app/config/theme/color_code_generator.dart';
 
-
 /// Configurable color palette for the application
 class AppColors {
   /// Primary color of the application
@@ -45,6 +44,10 @@ class AppColors {
   /// Border colors
   late final Color borderLight;
   late final Color borderDark;
+
+  // Transparent
+  late Color transparent;
+  late Color semiTransparent;
 
   AppColors({
     required this.primary,
@@ -90,5 +93,9 @@ class AppColors {
     // Generate border colors
     borderLight = const Color(0xFFE0E0E0);
     borderDark = const Color(0xFF424242);
+
+// Transparent
+    transparent = const Color.fromRGBO(0, 0, 0, 0);
+    semiTransparent = const Color.fromRGBO(0, 0, 0, 0.479);
   }
 }

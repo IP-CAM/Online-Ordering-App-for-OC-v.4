@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ordering_app/config/theme/custom_colors.dart';
-import 'package:ordering_app/config/theme/theme.dart';
+import 'package:ordering_app/config/theme/app_theme.dart';
 import 'package:ordering_app/core/dependencies/dependencies.dart';
 import 'package:ordering_app/core/database/migrations.dart';
 import 'package:ordering_app/features/home/presentation/pages/home_page.dart';

@@ -14,6 +14,7 @@ class AppTheme {
         secondary: colors.secondary,
         error: colors.error,
         surface: colors.surfaceLight,
+        surfaceDim: colors.backgroundDark,
       ),
       // Text Theme
       textTheme: TextTheme(
@@ -66,12 +67,12 @@ class AppTheme {
       // Component Themes
       appBarTheme: AppBarTheme(
         color: colors.primary,
-        foregroundColor: Colors.white,
+        foregroundColor: colors.surfaceLight,
         elevation: 0,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
+          foregroundColor: colors.surfaceLight,
           backgroundColor: colors.primary,
           elevation: 2,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -133,64 +134,66 @@ class AppTheme {
         secondary: colors.secondary,
         error: colors.error,
         surface: colors.surfaceDark,
+        surfaceDim: colors.backgroundLight,
+
       ),
       // Text Theme
-      textTheme: const TextTheme(
+      textTheme: TextTheme(
         displayLarge: TextStyle(
           fontSize: 96,
           fontWeight: FontWeight.w300,
-          color: Colors.white,
+          color: colors.surfaceLight,
         ),
         displayMedium: TextStyle(
           fontSize: 60,
           fontWeight: FontWeight.w300,
-          color: Colors.white,
+          color: colors.surfaceLight,
         ),
         displaySmall: TextStyle(
           fontSize: 48,
           fontWeight: FontWeight.w400,
-          color: Colors.white,
+          color: colors.surfaceLight,
         ),
         headlineMedium: TextStyle(
           fontSize: 34,
           fontWeight: FontWeight.w400,
-          color: Colors.white,
+          color: colors.surfaceLight,
         ),
         headlineSmall: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.w400,
-          color: Colors.white,
+          color: colors.surfaceLight,
         ),
         titleLarge: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.w500,
-          color: Colors.white,
+          color: colors.surfaceLight,
         ),
         bodyLarge: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w400,
-          color: Colors.white,
+          color: colors.surfaceLight,
         ),
         bodyMedium: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w400,
-          color: Colors.white,
+          color: colors.surfaceLight,
         ),
         bodySmall: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w400,
-          color: Colors.white70,
+          color: colors.surfaceLight,
         ),
       ),
       // Component Themes
       appBarTheme: AppBarTheme(
         color: colors.surfaceDark,
-        foregroundColor: Colors.white,
+        foregroundColor: colors.surfaceLight,
         elevation: 0,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
+          foregroundColor: colors.surfaceLight,
           backgroundColor: colors.primary,
           elevation: 2,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -201,8 +204,8 @@ class AppTheme {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: Colors.white,
-          side: const BorderSide(color: Colors.white),
+          foregroundColor: colors.surfaceLight,
+          side: BorderSide(color: colors.surfaceLight),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
@@ -211,7 +214,7 @@ class AppTheme {
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: Colors.white,
+          foregroundColor: colors.surfaceLight,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         ),
       ),
