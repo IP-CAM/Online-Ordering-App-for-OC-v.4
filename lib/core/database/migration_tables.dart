@@ -1,25 +1,20 @@
 part of 'migrations.dart';
 
-/// List of all database tables with their structure
-final List<DbTableModel> tables = [
-  DbTableModel(
-    tableName: DbTables.theme,
-    columns: {
-      DbColumns.id: DbColumn.integer().autoIncrement().toString(),
-      DbColumns.themeMode: DbColumn.text()
-          .notNull()
-          .defaultValue(DbDefaults.systemTheme)
-          .toString(),
-    },
+/// List of table definitions with their structure providers
+final List<TableDefinition> tables = [
+  TableDefinition(
+    name: DbTables.theme,
+    columns: ThemeModel.getTableStructure(),
   ),
-  // Example of another table:
-  // DbTableModel(
-  //   tableName: DbTables.users,
-  //   columns: {
-  //     DbColumns.id: DbColumn.integer().autoIncrement().toString(),
-  //     DbColumns.name: DbColumn.text().notNull().toString(),
-  //     DbColumns.email: DbColumn.text().notNull().unique().toString(),
-  //     DbColumns.createdAt: DbColumn.datetime().notNull().toString(),
-  //   },
-  // ),
 ];
+
+/// Table definition class to hold table information
+class TableDefinition {
+  final String name;
+  final Map<String, DbColumn> columns;
+
+  const TableDefinition({
+    required this.name,
+    required this.columns,
+  });
+}

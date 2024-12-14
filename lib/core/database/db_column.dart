@@ -1,4 +1,3 @@
-/// Class to define database column properties in a fluent way
 class DbColumn {
   String _definition = '';
   bool _isNullable = true;

@@ -3,6 +3,4 @@ class ThemeEntity {
   ThemeEntity({
     required this.isDarkMode,
   });
-
- 
 }

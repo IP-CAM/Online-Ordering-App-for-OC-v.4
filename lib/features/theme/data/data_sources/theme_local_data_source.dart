@@ -47,7 +47,7 @@ class ThemeLocalDataSourceImpl implements ThemeLocalDataSource {
             {DbColumns.themeMode: themeValue});
       } else {
         await _databaseHelper
-            .create(DbTables.theme, {DbColumns.themeMode: themeValue});
+            .insert(DbTables.theme, {DbColumns.themeMode: themeValue});
       }
     } catch (error, stackTrace) {
       debugPrint('Error saving theme: $error\n$stackTrace');

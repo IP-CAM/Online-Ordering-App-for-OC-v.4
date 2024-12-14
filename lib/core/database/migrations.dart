@@ -1,22 +1,21 @@
 import 'package:flutter/foundation.dart';
-import 'package:ordering_app/core/common/models/db_table_model.dart';
-import 'package:ordering_app/core/utils/database_helper.dart';
 import 'package:ordering_app/core/database/db_column.dart';
+import 'package:ordering_app/core/utils/database_helper.dart';
 import 'package:ordering_app/core/database/db_constants.dart';
+import 'package:ordering_app/features/theme/data/models/theme_model.dart';
 
 part 'migration_tables.dart';
 
 /// Function to execute all database migrations
 Future<void> migrateDbTables() async {
   final DatabaseHelper databaseHelper = DatabaseHelper();
+  final tables = {
+    DbTables.theme: ThemeModel.getTableStructure(),
+  };
 
-  for (final table in tables) {
-    await databaseHelper.createTable(
-      table.tableName,
-      table.columns,
-    );
-
-    debugPrint('Table created => ${table.tableName}');
+  for (final entry in tables.entries) {
+    await databaseHelper.create(entry.key, entry.value);
+    debugPrint('Table created => ${entry.key}');
   }
 }
 
@@ -24,9 +23,9 @@ Future<void> migrateDbTables() async {
 Map<String, List<Map<String, dynamic>>> getInitialData() {
   return {
     DbTables.theme: [
-      {
-        DbColumns.themeMode: DbDefaults.systemTheme,
-      }
+     {
+      DbColumns.themeMode : DbDefaults.systemTheme,
+     },
     ],
   };
 }
@@ -41,7 +40,8 @@ Future<void> seedInitialData() async {
     final data = entry.value;
 
     for (final item in data) {
-      await databaseHelper.create(tableName, item);
+      await databaseHelper.insert(tableName, item);
+      debugPrint('Seeded $tableName with data: $item');
     }
   }
 }
