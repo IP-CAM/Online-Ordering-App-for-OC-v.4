@@ -4,7 +4,6 @@ import 'package:ordering_app/core/utils/loader.dart';
 import 'package:ordering_app/core/utils/navigation_service.dart';
 import 'package:ordering_app/core/utils/show_snackbar.dart';
 import 'package:ordering_app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:ordering_app/features/auth/presentation/pages/login_page.dart';
 import 'package:ordering_app/features/theme/presentation/widgets/theme_mode_fab.dart';
 import 'package:ordering_app/config/routes/route_constants.dart';
 
@@ -319,12 +318,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginPage(),
-                            ),
-                          );
+                          NavigationService.push(context, RouteConstants.login);
                         },
                         child: const Text('Log In'),
                       ),
