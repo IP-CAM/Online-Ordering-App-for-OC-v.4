@@ -1,18 +1,21 @@
 /// Database table names
 class DbTables {
   static const String theme = 'theme';
-  // Add more table names here
+  static const String loginInfo = 'login_info';
 }
 
 /// Database column names
 class DbColumns {
   static const String id = 'id';
+
+  // Theme
   static const String themeMode = 'theme_mode';
-  // Add more column names here
+
+  // Login info
+  static const String customerToken = 'customer_token';
 }
 
 /// Default values
 class DbDefaults {
   static const String systemTheme = 'system';
-  // Add more default values here
 }

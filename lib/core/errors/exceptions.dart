@@ -6,3 +6,6 @@ class AppException implements Exception{
 
 
 }
+class DatabaseException extends AppException {
+  DatabaseException(super.message);
+}

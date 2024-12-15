@@ -27,6 +27,7 @@ class ThemeModeFAB extends StatelessWidget {
     if (state is ThemeLoading) {
       return FloatingActionButton(
         onPressed: null,
+        shape: const CircleBorder(), // Explicit circular shape
         child: CircularProgressIndicator(
           valueColor: AlwaysStoppedAnimation<Color>(
             Theme.of(context).colorScheme.primary,
@@ -39,6 +40,7 @@ class ThemeModeFAB extends StatelessWidget {
       return FloatingActionButton(
         onPressed: () => _onThemeToggle(context, state),
         tooltip: 'Toggle Theme Mode',
+        shape: const CircleBorder(), // Explicit circular shape
         child: _getThemeModeIcon(state.theme.isDarkMode),
       );
     }
@@ -49,6 +51,7 @@ class ThemeModeFAB extends StatelessWidget {
       return FloatingActionButton(
         onPressed: () => _onThemeToggle(context, state),
         tooltip: 'Toggle Theme Mode',
+        shape: const CircleBorder(), // Explicit circular shape
         child: _getThemeModeIcon(isDarkMode),
       );
     }
@@ -56,8 +59,8 @@ class ThemeModeFAB extends StatelessWidget {
     // Fallback for any unexpected state
     return FloatingActionButton(
       onPressed: null,
-      child:
-          Icon(Icons.error_outline, color: Theme.of(context).colorScheme.error),
+      shape: const CircleBorder(), // Explicit circular shape
+      child: Icon(Icons.error_outline, color: Theme.of(context).colorScheme.error),
     );
   }
 

@@ -2,12 +2,20 @@ part of 'dependencies.dart';
 
 final GetIt serviceLocator = GetIt.instance;
 final DatabaseHelper _databaseHelper = DatabaseHelper();
+final WebService _webService = WebService();
 
 Future<void> injectDependencies() async {
   // _injectOnBoarding();
   // _injectHome();
-
+  _injectCore();
   _injectTheme();
+  _injectAuth();
+}
+
+void _injectCore() {
+  serviceLocator.registerLazySingleton(
+    () => AuthCubit(),
+  );
 }
 
 void _injectTheme() {
@@ -16,7 +24,7 @@ void _injectTheme() {
   serviceLocator
     ..registerFactory<ThemeLocalDataSource>(
       () => ThemeLocalDataSourceImpl(
-        _databaseHelper,
+        databaseHelper: _databaseHelper,
       ),
     )
 
@@ -43,6 +51,57 @@ void _injectTheme() {
       () => ThemeBloc(
         fetchTheme: serviceLocator(),
         saveTheme: serviceLocator(),
+      ),
+    );
+}
+
+void _injectAuth() {
+  // Data sources
+  serviceLocator
+    ..registerFactory<AuthRemoteDataSource>(
+      () => AuthRemoteDataSourceImpl(
+        webService: _webService,
+      ),
+    )
+    ..registerFactory<AuthLocalDataSource>(
+      () => AuthLocalDataSourceImpl(_databaseHelper),
+    )
+// Repositories
+    ..registerFactory<AuthRepository>(
+      () => AuthRepositoryImpl(
+        authRemoteDataSource: serviceLocator(),
+        authLocalDataSource: serviceLocator(),
+      ),
+    )
+// Use cases
+    ..registerFactory(
+      () => Login(
+        serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => Logout(
+        serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => Register(
+        serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => FetchLoginInfo(
+        serviceLocator(),
+      ),
+    )
+// Blocs
+    ..registerLazySingleton(
+      () => AuthBloc(
+        login: serviceLocator(),
+        logout: serviceLocator(),
+        register: serviceLocator(),
+        fetchLoginInfo: serviceLocator(),
+        authCubit: serviceLocator(),
       ),
     );
 }

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:ordering_app/core/database/db_column.dart';
-import 'package:ordering_app/core/database/db_constants.dart';
+import 'package:ordering_app/core/constants/db_constants.dart';
 import 'package:ordering_app/features/theme/domain/entities/theme_entity.dart';
 
 class ThemeModel extends ThemeEntity {

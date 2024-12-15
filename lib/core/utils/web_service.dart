@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:ordering_app/core/constants/urls.dart';
 
 class ApiResponse<T> {
   final T? data;
@@ -15,16 +16,13 @@ class ApiResponse<T> {
 }
 
 class WebService {
-  static const String baseUrl =
-      'https://api.example.com'; // Replace with your API base URL
-  static const int timeoutDuration = 30; // Timeout in seconds
+  static const int timeoutDuration = 30;
 
   final Map<String, String> _defaultHeaders = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   };
 
-  // Singleton pattern
   static final WebService _instance = WebService._internal();
 
   factory WebService() {
@@ -33,82 +31,124 @@ class WebService {
 
   WebService._internal();
 
-  // Set auth token
   void setAuthToken(String token) {
     _defaultHeaders['Authorization'] = 'Bearer $token';
   }
 
-  // GET request
   Future<ApiResponse<T>> get<T>({
     required String endpoint,
     Map<String, String>? headers,
     Map<String, dynamic>? queryParameters,
   }) async {
     try {
-      final uri = Uri.parse('$baseUrl$endpoint').replace(
+      final Uri uri = Uri.parse('${Urls.baseUrl}$endpoint').replace(
         queryParameters: queryParameters,
       );
 
-      final response = await http.get(
-        uri,
-        headers: {..._defaultHeaders, ...?headers},
-      ).timeout(const Duration(seconds: timeoutDuration));
+      final Map<String, String> adjustedHeaders = {
+        ..._defaultHeaders,
+        ...?headers,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      };
+
+      final http.Response response = await http
+          .get(
+            uri,
+            headers: adjustedHeaders,
+          )
+          .timeout(const Duration(seconds: timeoutDuration));
 
       return _handleResponse<T>(response);
     } catch (e) {
-      return ApiResponse(
+      return ApiResponse<T>(
         success: false,
         error: _handleError(e),
       );
     }
   }
 
-  // POST request
   Future<ApiResponse<T>> post<T>({
     required String endpoint,
     required dynamic body,
     Map<String, String>? headers,
   }) async {
     try {
-      final uri = Uri.parse('$baseUrl$endpoint');
-      final response = await http
+      final Uri uri = Uri.parse('${Urls.baseUrl}$endpoint');
+
+      final String processedBody = _processRequestBody(body);
+
+      final Map<String, String> adjustedHeaders = {
+        ..._defaultHeaders,
+        ...?headers,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      };
+
+      final http.Response response = await http
           .post(
             uri,
-            headers: {..._defaultHeaders, ...?headers},
-            body: json.encode(body),
+            headers: adjustedHeaders,
+            body: processedBody,
+            encoding: Encoding.getByName('utf-8'),
           )
           .timeout(const Duration(seconds: timeoutDuration));
 
       return _handleResponse<T>(response);
     } catch (e) {
-      return ApiResponse(
+      return ApiResponse<T>(
         success: false,
         error: _handleError(e),
       );
     }
   }
 
-  // Handle API response
+  String _processRequestBody(dynamic body) {
+    if (body is Map<String, dynamic>) {
+      return body.entries
+          .map((MapEntry<String, dynamic> e) =>
+              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value.toString())}')
+          .join('&');
+    } else if (body is String) {
+      return body;
+    } else {
+      return json.encode(body);
+    }
+  }
+
   ApiResponse<T> _handleResponse<T>(http.Response response) {
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      return ApiResponse(
-        success: true,
-        data: json.decode(response.body) as T,
-      );
+      try {
+        final dynamic decodedBody = json.decode(response.body);
+        if (decodedBody is Map) {
+          if (decodedBody.containsKey('error')) {
+            return ApiResponse<T>(
+              success: false,
+              error: decodedBody['error']['warning'] ?? 'Unknown error!',
+            );
+          }
+        }
+        return ApiResponse<T>(
+          success: true,
+          data: decodedBody as T,
+        );
+      } catch (e) {
+        return ApiResponse<T>(
+          success: false,
+          error: 'Failed to decode response',
+        );
+      }
     } else {
-      return ApiResponse(
+      return ApiResponse<T>(
         success: false,
         error: _getErrorMessage(response),
       );
     }
   }
 
-  // Handle errors
   String _handleError(dynamic error) {
     if (error is http.ClientException) {
       return 'Network error occurred';
     } else if (error is FormatException) {
-      return 'Invalid response format';
+      return 'Invalid format error';
     } else if (error is TimeoutException) {
       return 'Request timed out';
     } else {
@@ -116,11 +156,10 @@ class WebService {
     }
   }
 
-  // Get error message from response
   String _getErrorMessage(http.Response response) {
     try {
-      final body = json.decode(response.body);
-      return body['message'] ?? 'Unknown error occurred';
+      final Map<String, dynamic> body = json.decode(response.body);
+      return body['message'] as String? ?? 'Unknown error occurred';
     } catch (e) {
       return 'Error ${response.statusCode}: ${response.reasonPhrase}';
     }

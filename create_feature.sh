@@ -48,34 +48,27 @@ for file in "${DATA_FILES[@]}"; do
 done
 
 # Domain Layer Structure
-DOMAIN_SUBFOLDERS=("entities" "repositories" "usecases")
+DOMAIN_SUBFOLDERS=("entities" "repositories" "use_cases")
 for subfolder in "${DOMAIN_SUBFOLDERS[@]}"; do
     mkdir -p "$BASE_DIR/domain/$subfolder"
 done
 
 # Create domain layer files
 DOMAIN_FILES=(
-    "entities/${FEATURE_NAME}_entity.dart"
     "repositories/${FEATURE_NAME}_repository.dart"
-    "use_cases/fetch_${FEATURE_NAME}.dart"
-    "use_cases/save_${FEATURE_NAME}.dart"
-    "use_cases/update_${FEATURE_NAME}.dart"
 )
 for file in "${DOMAIN_FILES[@]}"; do
     touch "$BASE_DIR/domain/$file"
 done
 
 # Presentation Layer Structure
-PRESENTATION_SUBFOLDERS=("bloc" "pages" "widgets")
+PRESENTATION_SUBFOLDERS=("blocs" "pages" "widgets")
 for subfolder in "${PRESENTATION_SUBFOLDERS[@]}"; do
     mkdir -p "$BASE_DIR/presentation/$subfolder"
 done
 
 # Create presentation layer files
 PRESENTATION_FILES=(
-    "bloc/${FEATURE_NAME}_bloc.dart"
-    "bloc/${FEATURE_NAME}_event.dart"
-    "bloc/${FEATURE_NAME}_state.dart"
     "pages/${FEATURE_NAME}_page.dart"
     "widgets/${FEATURE_NAME}_list_widget.dart"
 )

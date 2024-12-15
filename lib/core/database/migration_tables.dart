@@ -1,13 +1,5 @@
 part of 'migrations.dart';
 
-/// List of table definitions with their structure providers
-final List<TableDefinition> tables = [
-  TableDefinition(
-    name: DbTables.theme,
-    columns: ThemeModel.getTableStructure(),
-  ),
-];
-
 /// Table definition class to hold table information
 class TableDefinition {
   final String name;
@@ -18,3 +10,15 @@ class TableDefinition {
     required this.columns,
   });
 }
+
+/// List of table definitions with their structure providers
+final List<TableDefinition> tables = [
+  TableDefinition(
+    name: DbTables.theme,
+    columns: ThemeModel.getTableStructure(),
+  ),
+  TableDefinition(
+    name: DbTables.loginInfo,
+    columns: LoginInfoModel.getTableStructure(),
+  ),
+];
