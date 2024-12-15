@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ordering_app/core/common/entities/login_info.dart';
+import 'package:ordering_app/core/common/entities/login_info_entity.dart';
 
 part 'auth_state.dart';
 

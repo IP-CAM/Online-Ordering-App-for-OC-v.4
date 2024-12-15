@@ -27,7 +27,7 @@ class AuthRepositoryImpl implements AuthRepository {
         password: password,
       );
       await _authLocalDataSource.login(
-        customerToken: res.customerToken,
+        authInfo: res,
       );
       return right(res);
     } on AppException catch (e) {
@@ -38,8 +38,10 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, void>> logout() async {
     try {
-      await _authRemoteDataSource.logout();
       await _authLocalDataSource.logout();
+      final authInfo = await _authLocalDataSource.getLoginInfo();
+
+      await _authRemoteDataSource.logout(customerToken: authInfo!.token);
       return right(null);
     } on AppException catch (e) {
       return left(Failure(e.message));
@@ -69,7 +71,7 @@ class AuthRepositoryImpl implements AuthRepository {
         newsletter: newsletter,
       );
       await _authLocalDataSource.login(
-        customerToken: res.customerToken,
+        authInfo: res,
       );
 
       return right(res);
@@ -84,6 +86,14 @@ class AuthRepositoryImpl implements AuthRepository {
       final res = await _authLocalDataSource.getLoginInfo();
       if (res == null) {
         return left(Failure('No user found!'));
+      } else {
+        final validateRes = await _authRemoteDataSource.validateToken(
+          customerToken: res.token,
+          deviceId: res.deviceId,
+        );
+        if (!validateRes) {
+          return left(Failure('User session expired!'));
+        }
       }
       return right(res);
     } on AppException catch (e) {

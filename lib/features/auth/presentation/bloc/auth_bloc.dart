@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ordering_app/core/common/cubits/cubit/auth_cubit.dart';
-import 'package:ordering_app/core/common/entities/login_info.dart';
+import 'package:ordering_app/core/common/entities/login_info_entity.dart';
 import 'package:ordering_app/core/use_case/use_case.dart';
 import 'package:ordering_app/features/auth/domain/use_cases/fetch_login_info.dart';
 import 'package:ordering_app/features/auth/domain/use_cases/login.dart';

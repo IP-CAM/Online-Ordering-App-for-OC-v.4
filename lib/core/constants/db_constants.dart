@@ -12,7 +12,13 @@ class DbColumns {
   static const String themeMode = 'theme_mode';
 
   // Login info
-  static const String customerToken = 'customer_token';
+  static const String token = 'token';
+  static const String deviceId = 'deviceId';
+  static const String email = 'email';
+  static const String firstName = 'firstName';
+  static const String lastName = 'lastName';
+  static const String telephone = 'telephone';
+  static const String expiresAt = 'expiresAt';
 }
 
 /// Default values

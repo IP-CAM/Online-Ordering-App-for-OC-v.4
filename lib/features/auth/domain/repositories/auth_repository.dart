@@ -1,5 +1,5 @@
 import 'package:fpdart/fpdart.dart';
-import 'package:ordering_app/core/common/entities/login_info.dart';
+import 'package:ordering_app/core/common/entities/login_info_entity.dart';
 import 'package:ordering_app/core/errors/failures.dart';
 
 abstract interface class AuthRepository {

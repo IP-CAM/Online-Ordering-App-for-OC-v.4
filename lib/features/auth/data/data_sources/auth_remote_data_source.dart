@@ -4,6 +4,7 @@ import 'package:ordering_app/core/errors/exceptions.dart';
 import 'package:ordering_app/core/utils/web_service.dart';
 import 'package:ordering_app/features/auth/data/models/login_info_model.dart';
 
+
 /// Contract for handling remote authentication operations
 abstract interface class AuthRemoteDataSource {
   /// Authenticates user with email and password
@@ -13,7 +14,7 @@ abstract interface class AuthRemoteDataSource {
   });
 
   /// Logs out the current user
-  Future<void> logout();
+  Future<void> logout({required String customerToken});
 
   /// Registers a new user
   Future<LoginInfoModel> register({
@@ -26,6 +27,9 @@ abstract interface class AuthRemoteDataSource {
     required bool agree,
     required bool newsletter,
   });
+
+  /// Validates the authentication token
+  Future<bool> validateToken({required String customerToken,required String deviceId,});
 }
 
 /// Remote implementation of [AuthRemoteDataSource] using REST API
@@ -50,10 +54,24 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           'password': password,
         },
       );
-      if(response.error != null){
+      
+      if (response.error != null) {
         throw response.error.toString();
       }
-      return LoginInfoModel.fromMap(response.data);
+
+      // Transform the response data to match our model
+      final responseData = response.data['data'];
+      final authData = {
+        'token': responseData['token'],
+        'deviceId': responseData['device_id'],
+        'email': responseData['customer']['email'],
+        'firstName': responseData['customer']['firstname'],
+        'lastName': responseData['customer']['lastname'],
+        'telephone': responseData['customer']['telephone'],
+        'expiresAt': responseData['expires_at'],
+      };
+
+      return LoginInfoModel.fromMap(authData);
     } catch (error, stackTrace) {
       debugPrint('Error during login: $error');
       debugPrint('Stack trace: $stackTrace');
@@ -62,10 +80,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<void> logout() async {
+  Future<void> logout({required String customerToken}) async {
     try {
-    final response =  await _webService.get(endpoint: Urls.logout);
-          if(response.error != null){
+      final response = await _webService.post(
+        endpoint: Urls.logout,
+        body: {'token': customerToken},
+      );
+      
+      if (response.error != null) {
         throw response.error.toString();
       }
     } catch (error, stackTrace) {
@@ -90,20 +112,55 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final response = await _webService.post(
         endpoint: Urls.register,
         body: {
-          'firstName': firstName,
-          'lastName': lastName,
+          'firstname': firstName,
+          'lastname': lastName,
           'email': email,
           'telephone': telephone,
           'password': password,
-          'newsletter': newsletter,
+          'confirm': confirm,
+          'agree': agree ? '1' : '0',
+          'newsletter': newsletter ? '1' : '0',
         },
       );
-      if(response.error != null){
+      
+      if (response.error != null) {
         throw response.error.toString();
       }
-      return LoginInfoModel.fromMap(response.data);
+
+      // Transform the response data to match our model
+      final responseData = response.data['data'];
+      final authData = {
+        'token': responseData['token'],
+        'email': email,
+        'firstName': firstName,
+        'lastName': lastName,
+        'telephone': telephone,
+        'expiresAt': responseData['expires_at'],
+      };
+
+      return LoginInfoModel.fromMap(authData);
     } catch (error, stackTrace) {
       debugPrint('Error during registration: $error');
+      debugPrint('Stack trace: $stackTrace');
+      throw AppException(error.toString());
+    }
+  }
+
+  @override
+  Future<bool> validateToken({required String customerToken, required String deviceId,}) async {
+    try {
+      final response = await _webService.post(
+        endpoint: Urls.validateToken,
+        body: {'token': customerToken, 'device_id':deviceId,},
+      );
+      
+      if (response.error != null) {
+        throw response.error.toString();
+      }
+print(response.data);
+      return response.data['valid'] == true;
+    } catch (error, stackTrace) {
+      debugPrint('Error validating token: $error');
       debugPrint('Stack trace: $stackTrace');
       throw AppException(error.toString());
     }

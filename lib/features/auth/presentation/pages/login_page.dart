@@ -5,7 +5,6 @@ import 'package:ordering_app/core/utils/loader.dart';
 import 'package:ordering_app/core/utils/navigation_service.dart';
 import 'package:ordering_app/core/utils/show_snackbar.dart';
 import 'package:ordering_app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:ordering_app/features/auth/presentation/pages/signup_page.dart';
 import 'package:ordering_app/features/theme/presentation/widgets/theme_mode_fab.dart';
 
 class LoginPage extends StatefulWidget {
@@ -191,12 +190,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SignUpPage(),
-                            ),
-                          );
+                          NavigationService.push(context, RouteConstants.register);
                         },
                         child: const Text('Sign Up'),
                       ),

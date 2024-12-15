@@ -4,15 +4,16 @@ import 'package:ordering_app/core/errors/exceptions.dart';
 import 'package:ordering_app/core/utils/database_helper.dart';
 import 'package:ordering_app/features/auth/data/models/login_info_model.dart';
 
+
 /// Abstract interface for handling local authentication operations
 abstract interface class AuthLocalDataSource {
-  /// Stores the customer token for login
-  Future<void> login({required String customerToken});
+  /// Stores the authentication information
+  Future<void> login({required LoginInfoModel authInfo});
 
   /// Removes stored authentication data
   Future<void> logout();
 
-  /// Retrieves stored login information
+  /// Retrieves stored authentication information
   Future<LoginInfoModel?> getLoginInfo();
 }
 
@@ -33,33 +34,31 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
       if (result == null) return null;
 
-      return LoginInfoModel(
-        customerToken: result[DbColumns.customerToken],
-      );
+      return LoginInfoModel.fromMap(result);
     } catch (e, stackTrace) {
-      debugPrint('Error getting login info: $e');
+      debugPrint('Error getting auth info: $e');
       debugPrint('Stack trace: $stackTrace');
       throw DatabaseException(
-          'Failed to retrieve login information: ${e.toString()}');
+          'Failed to retrieve authentication information: ${e.toString()}');
     }
   }
 
   @override
-  Future<void> login({required String customerToken}) async {
+  Future<void> login({required LoginInfoModel authInfo}) async {
     try {
-      // First clear any existing login data
+      // First clear any existing auth data
       await logout();
 
-      // Insert new login information
+      // Insert new auth information
       await _db.insert(
         DbTables.loginInfo,
-        {DbColumns.customerToken: customerToken},
+        authInfo.toMap(),
       );
     } catch (e, stackTrace) {
       debugPrint('Error during login: $e');
       debugPrint('Stack trace: $stackTrace');
       throw DatabaseException(
-          'Failed to store login information: ${e.toString()}');
+          'Failed to store authentication information: ${e.toString()}');
     }
   }
 
@@ -71,7 +70,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       debugPrint('Error during logout: $e');
       debugPrint('Stack trace: $stackTrace');
       throw DatabaseException(
-          'Failed to clear login information: ${e.toString()}');
+          'Failed to clear authentication information: ${e.toString()}');
     }
   }
 }
