@@ -4,7 +4,6 @@ import 'package:ordering_app/core/errors/exceptions.dart';
 import 'package:ordering_app/core/utils/web_service.dart';
 import 'package:ordering_app/features/auth/data/models/login_info_model.dart';
 
-
 /// Contract for handling remote authentication operations
 abstract interface class AuthRemoteDataSource {
   /// Authenticates user with email and password
@@ -14,7 +13,10 @@ abstract interface class AuthRemoteDataSource {
   });
 
   /// Logs out the current user
-  Future<void> logout({required String customerToken});
+  Future<void> logout({
+    required String customerToken,
+    required String deviceId,
+  });
 
   /// Registers a new user
   Future<LoginInfoModel> register({
@@ -29,7 +31,10 @@ abstract interface class AuthRemoteDataSource {
   });
 
   /// Validates the authentication token
-  Future<bool> validateToken({required String customerToken,required String deviceId,});
+  Future<bool> validateToken({
+    required String customerToken,
+    required String deviceId,
+  });
 }
 
 /// Remote implementation of [AuthRemoteDataSource] using REST API
@@ -54,7 +59,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           'password': password,
         },
       );
-      
+
       if (response.error != null) {
         throw response.error.toString();
       }
@@ -80,13 +85,19 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<void> logout({required String customerToken}) async {
+  Future<void> logout({
+    required String customerToken,
+    required String deviceId,
+  }) async {
     try {
       final response = await _webService.post(
         endpoint: Urls.logout,
-        body: {'token': customerToken},
+        body: {
+          'token': customerToken,
+          'device_id': deviceId,
+        },
       );
-      
+      debugPrint(response.data.toString());
       if (response.error != null) {
         throw response.error.toString();
       }
@@ -122,7 +133,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           'newsletter': newsletter ? '1' : '0',
         },
       );
-      
+
       if (response.error != null) {
         throw response.error.toString();
       }
@@ -131,10 +142,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final responseData = response.data['data'];
       final authData = {
         'token': responseData['token'],
-        'email': email,
-        'firstName': firstName,
-        'lastName': lastName,
-        'telephone': telephone,
+        'deviceId': responseData['device_id'],
+        'email': responseData['customer']['email'],
+        'firstName': responseData['customer']['firstname'],
+        'lastName': responseData['customer']['lastname'],
+        'telephone': responseData['customer']['telephone'],
         'expiresAt': responseData['expires_at'],
       };
 
@@ -147,17 +159,22 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<bool> validateToken({required String customerToken, required String deviceId,}) async {
+  Future<bool> validateToken({
+    required String customerToken,
+    required String deviceId,
+  }) async {
     try {
       final response = await _webService.post(
         endpoint: Urls.validateToken,
-        body: {'token': customerToken, 'device_id':deviceId,},
+        body: {
+          'token': customerToken,
+          'device_id': deviceId,
+        },
       );
-      
+
       if (response.error != null) {
         throw response.error.toString();
       }
-print(response.data);
       return response.data['valid'] == true;
     } catch (error, stackTrace) {
       debugPrint('Error validating token: $error');

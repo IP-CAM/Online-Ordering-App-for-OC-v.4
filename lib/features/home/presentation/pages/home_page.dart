@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ordering_app/config/routes/route_constants.dart';
+import 'package:ordering_app/core/utils/navigation_service.dart';
+import 'package:ordering_app/core/utils/show_snackbar.dart';
 import 'package:ordering_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ordering_app/features/theme/presentation/widgets/theme_mode_fab.dart';
 
@@ -28,13 +31,28 @@ class _HomePageState extends State<HomePage> {
               'Home Page',
               style: Theme.of(context).textTheme.bodyLarge,
             ),
-            IconButton(
-                onPressed: () {
-                  BlocProvider.of<AuthBloc>(context).add(LogoutEvent());
-                },
-                icon: const Icon(
-                  Icons.logout,
-                ))
+            BlocListener<AuthBloc, AuthState>(
+              listener: (context, state) {
+                if (state is AuthLogoutSuccess) {
+                  showCustomSnackBar(
+                    context: context,
+                    message: "Logged out!",
+                    type: SnackBarType.warning,
+                  );
+                  NavigationService.pushReplacement(
+                    context,
+                    RouteConstants.login,
+                  );
+                }
+              },
+              child: IconButton(
+                  onPressed: () {
+                    BlocProvider.of<AuthBloc>(context).add(LogoutEvent());
+                  },
+                  icon: const Icon(
+                    Icons.logout,
+                  )),
+            )
           ],
         ),
       ),

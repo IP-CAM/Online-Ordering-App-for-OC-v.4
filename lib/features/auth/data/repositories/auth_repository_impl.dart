@@ -38,10 +38,14 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<Failure, void>> logout() async {
     try {
-      await _authLocalDataSource.logout();
       final authInfo = await _authLocalDataSource.getLoginInfo();
 
-      await _authRemoteDataSource.logout(customerToken: authInfo!.token);
+if(authInfo != null){
+      await _authRemoteDataSource.logout(customerToken: authInfo.token, deviceId: authInfo.deviceId,);
+
+}
+      await _authLocalDataSource.logout();
+
       return right(null);
     } on AppException catch (e) {
       return left(Failure(e.message));
