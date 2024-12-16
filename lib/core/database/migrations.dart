@@ -3,6 +3,8 @@ import 'package:ordering_app/core/database/db_column.dart';
 import 'package:ordering_app/core/utils/database_helper.dart';
 import 'package:ordering_app/core/constants/db_constants.dart';
 import 'package:ordering_app/features/auth/data/models/login_info_model.dart';
+import 'package:ordering_app/core/common/models/category_model.dart';
+import 'package:ordering_app/core/common/models/product_model.dart';
 import 'package:ordering_app/features/theme/data/models/theme_model.dart';
 
 part 'migration_tables.dart';

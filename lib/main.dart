@@ -7,6 +7,7 @@ import 'package:ordering_app/core/common/cubits/cubit/auth_cubit.dart';
 import 'package:ordering_app/core/dependencies/dependencies.dart';
 import 'package:ordering_app/core/database/migrations.dart';
 import 'package:ordering_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:ordering_app/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:ordering_app/features/theme/presentation/bloc/theme_bloc.dart';
 import 'package:flutter/services.dart';
 
@@ -41,6 +42,9 @@ class AppRoot extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => serviceLocator<AuthCubit>(),
+        ),
+         BlocProvider(
+          create: (_) => serviceLocator<SplashBloc>(),
         ),
       ],
       child: const MyApp(),

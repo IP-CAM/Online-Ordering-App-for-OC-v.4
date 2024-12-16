@@ -21,4 +21,19 @@ final List<TableDefinition> tables = [
     name: DbTables.loginInfo,
     columns: LoginInfoModel.getTableStructure(),
   ),
+  TableDefinition(
+    name: DbTables.categories,
+    columns: CategoryModel.getTableStructure(),
+  ),
+  TableDefinition(
+    name: DbTables.products,
+    columns: ProductModel.getTableStructure(),
+  ),
+  TableDefinition(
+    name: DbTables.lastModified,
+    columns: {
+      DbColumns.id: DbColumn.integer().autoIncrement().notNull(),
+      DbColumns.date: DbColumn.text().notNull(),
+    },
+  ),
 ];

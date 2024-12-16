@@ -175,6 +175,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (response.error != null) {
         throw response.error.toString();
       }
+      debugPrint('Token validation ${response.data['valid'] == true ? 'Success' : 'Failed'}');
       return response.data['valid'] == true;
     } catch (error, stackTrace) {
       debugPrint('Error validating token: $error');

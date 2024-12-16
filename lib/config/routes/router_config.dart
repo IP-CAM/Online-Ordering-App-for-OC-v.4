@@ -7,6 +7,7 @@ import 'package:ordering_app/core/dependencies/dependencies.dart';
 import 'package:ordering_app/features/auth/presentation/pages/login_page.dart';
 import 'package:ordering_app/features/auth/presentation/pages/signup_page.dart';
 import 'package:ordering_app/features/home/presentation/pages/home_page.dart';
+import 'package:ordering_app/features/splash/presentation/pages/splash_page.dart';
 import 'route_constants.dart';
 
 class AppRouter {
@@ -19,11 +20,12 @@ class AppRouter {
     RouteConstants.login,
     RouteConstants.register,
     RouteConstants.home,
+    RouteConstants.splash,
   ];
 
   late final GoRouter router = GoRouter(
     debugLogDiagnostics: true,
-    initialLocation: RouteConstants.login,
+    initialLocation: RouteConstants.splash,
     refreshListenable: GoRouterRefreshStream(authCubit.stream),
     redirect: _globalRedirect,
     routes: [
@@ -41,6 +43,11 @@ class AppRouter {
         path: RouteConstants.home,
         name: 'home',
         builder: (context, state) => const HomePage(),
+      ),
+      GoRoute(
+        path: RouteConstants.splash,
+        name: 'splash',
+        builder: (context, state) => const SplashPage(),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(

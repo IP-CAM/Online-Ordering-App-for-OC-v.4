@@ -12,5 +12,5 @@ class Urls {
   static const String category = "menu|category";
   static const String products = "menu|products";
   static const String product = "menu|product";
-  static const String lastUpdated = 'menu|lastUpdated';
+  static const String lastModified = 'menu|lastModified';
 }

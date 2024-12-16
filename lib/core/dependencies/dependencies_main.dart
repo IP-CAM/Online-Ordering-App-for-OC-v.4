@@ -10,6 +10,7 @@ Future<void> injectDependencies() async {
   _injectCore();
   _injectTheme();
   _injectAuth();
+  _injectSplash();
 }
 
 void _injectCore() {
@@ -102,6 +103,40 @@ void _injectAuth() {
         register: serviceLocator(),
         fetchLoginInfo: serviceLocator(),
         authCubit: serviceLocator(),
+      ),
+    );
+}
+
+void _injectSplash() {
+// Data sources
+  serviceLocator
+    ..registerFactory<SplashLocalDataSource>(
+      () => SplashLocalDataSourceImpl(
+        _databaseHelper,
+      ),
+    )
+    ..registerFactory<SplashRemoteDataSource>(
+      () => SplashRemoteDataSourceImpl(webService: _webService),
+    )
+
+// Repositories
+    ..registerFactory<SplashRepository>(
+      () => SplashRepositoryImpl(
+        splashRemoteDataSource: serviceLocator(),
+        splashLocalDataSource: serviceLocator(),
+      ),
+    )
+// Use cases
+    ..registerFactory(
+      () => FetchMenu(
+        splashRepository: serviceLocator(),
+      ),
+    )
+
+// Blocs
+    ..registerLazySingleton(
+      () => SplashBloc(
+        fetchMenu: serviceLocator(),
       ),
     );
 }
