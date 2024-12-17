@@ -43,24 +43,29 @@ class CategoryModel extends CategoryEntity {
       'sortOrder': sortOrder,
       'status': status ? 1 : 0, // Convert boolean to integer for SQLite
       'productCount': productCount,
-      'products': products != null ? json.encode(products) : null, // Encode list as JSON string
+      'products': products != null ? json.encode(products) : null,
       'parentId': parentId,
     };
   }
 
   factory CategoryModel.fromMap(Map<String, dynamic> map) {
-    // Helper function to safely decode JSON string or use default value
-    T decodeOrDefault<T>(dynamic value, T defaultValue, T Function(dynamic) converter) {
-      if (value == null) return defaultValue;
+    // Helper function to safely decode JSON string and convert to List<int>
+    List<int>? decodeProductList(dynamic value) {
+      if (value == null) return null;
       if (value is String) {
         try {
           final decoded = json.decode(value);
-          return converter(decoded);
+          if (decoded is List) {
+            return decoded.map((e) => int.parse(e.toString())).toList();
+          }
         } catch (e) {
-          return defaultValue;
+          return null;
         }
       }
-      return converter(value);
+      if (value is List) {
+        return value.map((e) => int.parse(e.toString())).toList();
+      }
+      return null;
     }
 
     return CategoryModel(
@@ -71,13 +76,7 @@ class CategoryModel extends CategoryEntity {
       sortOrder: (map['sortOrder'] ?? 0) as int,
       status: map['status'] == 1, // Convert integer to boolean
       productCount: (map['productCount'] ?? 0) as int,
-      products: decodeOrDefault<List<String>?>(
-        map['products'],
-        null,
-        (dynamic value) => value != null 
-            ? (value as List).map((e) => e.toString()).toList()
-            : null,
-      ),
+      products: decodeProductList(map['products']),
       parentId: (map['parentId'] ?? 0) as int,
     );
   }

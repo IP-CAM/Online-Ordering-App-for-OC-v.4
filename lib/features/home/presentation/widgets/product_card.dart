@@ -1,44 +1,57 @@
-// import 'package:flutter/material.dart';
-// import 'package:ordering_app/features/products/domain/entities/product.dart';
-// import 'package:ordering_app/features/products/presentation/widgets/product_image.dart';
-// import 'package:ordering_app/features/products/presentation/widgets/product_details.dart';
+import 'package:flutter/material.dart';
+import 'package:ordering_app/core/common/entities/product_entity.dart';
+import 'package:ordering_app/features/home/presentation/widgets/product_details.dart';
+import 'package:ordering_app/features/home/presentation/widgets/product_image.dart';
 
-// class ProductCard extends StatelessWidget {
-//   final Product product;
-//   final VoidCallback? onTap;
-//   final double? width;
-//   final bool showAddToCart;
+class ProductCard extends StatelessWidget {
+  final ProductEntity product;
+  final VoidCallback? onTap;
+  final double? width;
+  final bool showAddToCart;
 
-//   const ProductCard({
-//     Key? key,
-//     required this.product,
-//     this.onTap,
-//     this.width,
-//     this.showAddToCart = true,
-//   }) : super(key: key);
+  const ProductCard({
+    super.key,
+    required this.product,
+    this.onTap,
+    this.width,
+    this.showAddToCart = true,
+  });
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Card(
-//       clipBehavior: Clip.antiAlias,
-//       child: InkWell(
-//         onTap: onTap,
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             // Product Image Section
-//             ProductImage(product: product),
-
-//             // Product Details Section
-//             Expanded(
-//               child: ProductDetails(
-//                 product: product,
-//                 showAddToCart: showAddToCart,
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Theme.of(context).cardColor,
+                Theme.of(context).cardColor.withOpacity(0.95),
+              ],
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ProductImage(product: product),
+              Expanded(
+                child: ProductDetails(
+                  product: product,
+                  showAddToCart: showAddToCart,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

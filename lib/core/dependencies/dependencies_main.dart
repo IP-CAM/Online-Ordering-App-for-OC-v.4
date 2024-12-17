@@ -3,10 +3,10 @@ part of 'dependencies.dart';
 final GetIt serviceLocator = GetIt.instance;
 final DatabaseHelper _databaseHelper = DatabaseHelper();
 final WebService _webService = WebService();
-
+final CachedWebService _cachedWebService = CachedWebService();
 Future<void> injectDependencies() async {
   // _injectOnBoarding();
-  // _injectHome();
+  _injectHome();
   _injectCore();
   _injectTheme();
   _injectAuth();
@@ -112,7 +112,7 @@ void _injectSplash() {
   serviceLocator
     ..registerFactory<SplashLocalDataSource>(
       () => SplashLocalDataSourceImpl(
-        _databaseHelper,
+        db: _databaseHelper,
       ),
     )
     ..registerFactory<SplashRemoteDataSource>(
@@ -177,71 +177,51 @@ void _injectSplash() {
 //     );
 // }
 
-// void _injectHome() {
-// // Data sources
+void _injectHome() {
+// Data sources
 
-//   serviceLocator
-//     ..registerFactory<HomeLocalDataSource>(
-//       () => HomeLocalDataSourceImpl(),
-//     )
+  serviceLocator
+    ..registerFactory<HomeLocalDataSource>(
+      () => HomeLocalDataSourceImpl(
+        db: _databaseHelper,
+      ),
+    )
+    ..registerFactory<HomeRemoteDataSource>(
+      () => HomeRemoteDataSourceImpl(webService: _cachedWebService),
+    )
 
-// // Repositories
-//     ..registerFactory<HomeRepository>(
-//       () => HomeRepositoryImpl(
-//         serviceLocator(),
-//       ),
-//     )
-// // Use cases
-//     ..registerFactory(
-//       () => AddTopic(
-//         serviceLocator(),
-//       ),
-//     )
-//     ..registerFactory(
-//       () => AddQuestionAndAnswer(
-//         serviceLocator(),
-//       ),
-//     )
-//     ..registerFactory(
-//       () => RemoveTopic(
-//         serviceLocator(),
-//       ),
-//     )
-//     ..registerFactory(
-//       () => RemoveQuestionAndAnswers(
-//         serviceLocator(),
-//       ),
-//     )
-//     ..registerFactory(
-//       () => UpdateTopic(
-//         serviceLocator(),
-//       ),
-//     )
-//     ..registerFactory(
-//       () => UpdateQuestionAndAnswer(
-//         serviceLocator(),
-//       ),
-//     )
-//     ..registerFactory(
-//       () => GetTopics(
-//         serviceLocator(),
-//       ),
-//     )
-//     ..registerFactory(
-//       () => GetQuestionAndAnswer(
-//         serviceLocator(),
-//       ),
-//     )
-// // Blocs
-//     ..registerLazySingleton(
-//       () => TopicBloc(
-//         addTopic: serviceLocator(),
-//         removeTopic: serviceLocator(),
-//         updateTopic: serviceLocator(),
-//         getTopics: serviceLocator(),
-//       ),
-//     );
-// }
+// Repositories
+    ..registerFactory<HomeRepository>(
+      () => HomeRepositoryImpl(
+        homeLocalDataSource: serviceLocator(),
+        homeRemoteDataSource: serviceLocator(),
+      ),
+    )
+
+// Use cases
+    ..registerFactory(
+      () => FetchHomeBanners(
+        homeRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => FetchFeaturedProducts(
+        homeRepository: serviceLocator(),
+      ),
+    )
+
+// Blocs
+    ..registerLazySingleton(
+      () => BannerBloc(
+        fetchHomeBanners: serviceLocator(),
+      ),
+    )
+    ..registerLazySingleton(
+      () => FeaturedProductsBloc(
+        fetchFeaturedProducts: serviceLocator(),
+      ),
+    );
+}
 
 // Data sources
 

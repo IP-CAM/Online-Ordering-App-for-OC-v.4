@@ -1,14 +1,15 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'package:ordering_app/core/common/entities/product_entity.dart';
 
 
 // class AddToCartButton extends StatelessWidget {
-//   final Product product;
+//   final ProductEntity product;
 
 //   const AddToCartButton({
-//     Key? key,
+//     super.key,
 //     required this.product,
-//   }) : super(key: key);
+//   });
 
 //   @override
 //   Widget build(BuildContext context) {

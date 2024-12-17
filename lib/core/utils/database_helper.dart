@@ -362,4 +362,142 @@ class DatabaseHelper {
     debugPrint('DatabaseHelper: Truncated $deletedRows rows from $table');
     return deletedRows;
   }
+
+  /// Get records by a list of IDs with ordering support
+  ///
+  /// Parameters:
+  /// - table: name of the table to query
+  /// - ids: List of IDs to fetch
+  /// - idColumn: Column to use for WHERE IN clause (defaults to 'id')
+  /// - orderBy: Optional column name to order by
+  /// - orderDirection: Optional order direction ('asc' or 'desc', defaults to 'asc')
+  ///
+  /// Example usage:
+  /// ```dart
+  /// // Basic usage
+  /// final items = await db.whereIn('products', [1, 2, 3, 4]);
+  ///
+  /// // With custom ordering
+  /// final items = await db.whereIn(
+  ///   'products',
+  ///   [1, 2, 3, 4],
+  ///   orderBy: 'sort_order',
+  ///   orderDirection: 'desc'
+  /// );
+  /// ```
+  Future<List<Map<String, dynamic>>> whereIn(
+    String table,
+    List<dynamic> ids, {
+    String column = 'id',
+    String? orderBy,
+    String orderDirection = 'asc',
+  }) async {
+    debugPrint('DatabaseHelper: Fetching records from $table with ids: $ids');
+
+    if (ids.isEmpty) {
+      return [];
+    }
+
+    // Create placeholders for the SQL query
+    final placeholders = List.filled(ids.length, '?').join(',');
+    final where = '$column IN ($placeholders)';
+
+    // Build order by clause if specified
+    final orderByClause =
+        orderBy != null ? '$orderBy ${orderDirection.toLowerCase()}' : null;
+
+    return all(
+      table,
+      where: where,
+      whereArgs: ids,
+      orderBy: orderByClause,
+    );
+  }
+
+  /// Build and execute a where query with multiple conditions
+  ///
+  /// Parameters:
+  /// - table: name of the table to query
+  /// - conditions: Map of column names and their values to search for
+  /// - operator: The operator to use between conditions ('AND' or 'OR'), defaults to 'AND'
+  /// - orderBy: Optional order by clause
+  /// - limit: Optional limit on number of results
+  /// - offset: Optional offset for pagination
+  ///
+  /// Example usage:
+  /// ```dart
+  /// // Single condition
+  /// final results = await db.where('users', {'status': 'active'});
+  ///
+  /// // Multiple conditions with AND
+  /// final results = await db.where('users', {
+  ///   'status': 'active',
+  ///   'age': 25
+  /// });
+  ///
+  /// // With list of IDs
+  /// final results = await db.where('users', {
+  ///   'id': [1, 2, 3, 4],
+  ///   'status': 'active'
+  /// });
+  /// ```
+  Future<List<Map<String, dynamic>>> where(
+    String table,
+    Map<String, dynamic> conditions, {
+    String operator = 'AND',
+    String? orderBy,
+    int? limit,
+    int? offset,
+  }) async {
+    debugPrint(
+        'DatabaseHelper: Building where query for $table with conditions: $conditions');
+
+    if (conditions.isEmpty) {
+      return all(table, orderBy: orderBy, limit: limit, offset: offset);
+    }
+
+    final List<String> whereClauses = [];
+    final List<dynamic> whereArgs = [];
+
+    // Handle different types of conditions
+    conditions.forEach((key, value) {
+      if (value is List) {
+        if (value.isEmpty) {
+          // Handle empty list case
+          whereClauses.add('1 = 0'); // This will return no results
+        } else {
+          // Handle IN clause
+          final placeholders = List.filled(value.length, '?').join(',');
+          whereClauses.add('$key IN ($placeholders)');
+          whereArgs.addAll(value);
+        }
+      } else if (value == null) {
+        // Handle NULL check
+        whereClauses.add('$key IS NULL');
+      } else if (value is String &&
+          (value.contains('%') || value.contains('_'))) {
+        // Handle LIKE clause
+        whereClauses.add('$key LIKE ?');
+        whereArgs.add(value);
+      } else {
+        // Handle regular equality
+        whereClauses.add('$key = ?');
+        whereArgs.add(value);
+      }
+    });
+
+    final whereClause = whereClauses.join(' $operator ');
+
+    debugPrint(
+        'DatabaseHelper: Generated where clause: $whereClause with args: $whereArgs');
+
+    return all(
+      table,
+      where: whereClause,
+      whereArgs: whereArgs,
+      orderBy: orderBy,
+      limit: limit,
+      offset: offset,
+    );
+  }
 }

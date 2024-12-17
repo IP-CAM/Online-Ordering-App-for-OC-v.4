@@ -15,7 +15,9 @@ abstract interface class SplashLocalDataSource {
 class SplashLocalDataSourceImpl implements SplashLocalDataSource {
   final DatabaseHelper _db;
 
-  const SplashLocalDataSourceImpl(this._db);
+  SplashLocalDataSourceImpl({required DatabaseHelper db}) : _db = db;
+
+
 
   @override
   Future<DateTime?> getLastModified() async {

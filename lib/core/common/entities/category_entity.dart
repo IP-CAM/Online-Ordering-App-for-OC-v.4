@@ -7,7 +7,7 @@ class CategoryEntity {
   final int sortOrder;
   final bool status;
   final int productCount;
-  final List<String>? products;
+  final List<int>? products;
   final int parentId;
 
   CategoryEntity({

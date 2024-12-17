@@ -50,13 +50,14 @@ void showCustomSnackBar({
       ],
     ),
     backgroundColor: colors[type],
-    duration: Duration(seconds: duration ?? 4),
+    duration: Duration(seconds: duration ?? 2),
     action: action,
     behavior: SnackBarBehavior.floating,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(8),
     ),
     margin: const EdgeInsets.all(8),
+    
   );
 
   ScaffoldMessenger.of(context).showSnackBar(snackBar);

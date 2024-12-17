@@ -1,4 +1,4 @@
-class SlideshowEntity {
+class HomeBannerEntity {
   final int moduleId;
   final String name;
   final int width;
@@ -10,7 +10,7 @@ class SlideshowEntity {
   final int interval;
   final List<SlideEntity> slides;
 
-  const SlideshowEntity({
+  const HomeBannerEntity({
     required this.moduleId,
     required this.name,
     required this.width,
@@ -34,4 +34,5 @@ class SlideEntity {
     required this.link,
     required this.image,
   });
+
 }
