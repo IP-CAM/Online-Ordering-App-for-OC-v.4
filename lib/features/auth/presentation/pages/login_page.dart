@@ -11,7 +11,7 @@ class LoginPage extends StatefulWidget {
   final String nextPage;
   const LoginPage({
     super.key,
-    this.nextPage = RouteConstants.home,
+    this.nextPage = RouteConstants.account,
   });
 
   @override
@@ -35,6 +35,9 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: const ThemeModeFAB(),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(

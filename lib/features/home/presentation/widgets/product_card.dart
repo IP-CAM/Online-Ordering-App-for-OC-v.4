@@ -37,6 +37,13 @@ class ProductCard extends StatelessWidget {
                 Theme.of(context).cardColor.withOpacity(0.95),
               ],
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

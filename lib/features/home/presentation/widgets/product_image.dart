@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ordering_app/core/common/entities/product_entity.dart';
+import 'package:ordering_app/core/utils/helpers.dart';
+import 'package:ordering_app/core/utils/show_snackbar.dart';
+import 'package:ordering_app/features/home/presentation/widgets/product_price.dart';
 
 class ProductImage extends StatelessWidget {
   final ProductEntity product;
@@ -78,7 +81,8 @@ class ProductImage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.3),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),
@@ -110,7 +114,8 @@ class ProductImage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.3),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),
@@ -127,39 +132,133 @@ class ProductImage extends StatelessWidget {
             ),
           ),
 
-        // // Favorite Button
-        // Positioned(
-        //   bottom: 8,
-        //   right: 8,
-        //   child: Container(
-        //     decoration: BoxDecoration(
-        //       color: Colors.white,
-        //       shape: BoxShape.circle,
-        //       boxShadow: [
-        //         BoxShadow(
-        //           color: Colors.black.withOpacity(0.1),
-        //           blurRadius: 4,
-        //           offset: const Offset(0, 2),
-        //         ),
-        //       ],
-        //     ),
-        //     child: IconButton(
-        //       icon: const Icon(Icons.favorite_border),
-        //       onPressed: () {
-        //         // Implement favorite functionality
-        //       },
-        //       iconSize: 20,
-        //       color: Theme.of(context).colorScheme.primary,
-        //       constraints: const BoxConstraints(
-        //         minWidth: 32,
-        //         minHeight: 32,
-        //       ),
-        //       padding: EdgeInsets.zero,
-        //       visualDensity: VisualDensity.compact,
-        //     ),
-        //   ),
-        // ),
+        // Favorite Button
+        Positioned(
+          top: 8,
+          right: 8,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.info_outline),
+              onPressed: () => _showProductDetails(context, product),
+              iconSize: 24,
+              color: Theme.of(context).colorScheme.primary,
+              constraints: const BoxConstraints(
+                minWidth: 32,
+                minHeight: 32,
+              ),
+              padding: EdgeInsets.zero,
+              visualDensity: VisualDensity.compact,
+            ),
+          ),
+        ),
       ],
+    );
+  }
+
+  void _showProductDetails(BuildContext context, ProductEntity product) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Product Image
+                Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(
+                      product.image,
+                      width: 200,
+                      height: 200,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          width: 200,
+                          height: 200,
+                          color: Colors.grey[300],
+                          child:
+                              const Icon(Icons.image_not_supported, size: 50),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Product Name
+                Text(
+                  product.name,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                const SizedBox(height: 8),
+
+                // Product Price
+                ProductPrice(product: product),
+                const SizedBox(height: 12),
+
+                // Product Description
+
+                Text(
+                  decodeHtmlEntities(product.description),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey[700],
+                      ),
+                ),
+                const SizedBox(height: 16),
+
+                // Add to Cart Button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: product.quantity > 0
+                        ? () {
+                            // Close the dialog
+                            Navigator.of(context).pop();
+
+                            // Show snackbar
+                            showCustomSnackBar(
+                              context: context,
+                              message: "${product.name} added to cart",
+                              type: SnackBarType.success,
+                            );
+                          }
+                        : null,
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    icon: const Icon(Icons.add_shopping_cart, size: 20),
+                    label: const Text('Add to Cart'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

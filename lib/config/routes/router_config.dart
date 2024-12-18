@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ordering_app/core/common/cubits/cubit/auth_cubit.dart';
 import 'package:ordering_app/core/dependencies/dependencies.dart';
+import 'package:ordering_app/features/auth/presentation/pages/account_page.dart';
 import 'package:ordering_app/features/auth/presentation/pages/login_page.dart';
 import 'package:ordering_app/features/auth/presentation/pages/signup_page.dart';
 import 'package:ordering_app/features/home/presentation/pages/home_page.dart';
@@ -21,6 +22,8 @@ class AppRouter {
     RouteConstants.register,
     RouteConstants.home,
     RouteConstants.splash,
+    RouteConstants.menu,
+    RouteConstants.about,
   ];
 
   late final GoRouter router = GoRouter(
@@ -49,6 +52,11 @@ class AppRouter {
         name: 'splash',
         builder: (context, state) => const SplashPage(),
       ),
+      GoRoute(
+        path: RouteConstants.account,
+        name: 'account',
+        builder: (context, state) => const AccountPage(),
+      ),
     ],
     errorBuilder: (context, state) => Scaffold(
       body: Center(
@@ -61,16 +69,16 @@ class AppRouter {
       BuildContext context, GoRouterState state) async {
     final isAuth = authCubit.state is AuthSuccess;
 
-    // If the user is not logged in and trying to access any route except public routes
-    if (!isAuth && !publicRoutes.contains(state.matchedLocation)) {
-      return RouteConstants.login;
-    }
-
     // If the user is logged in and trying to access login/register
     if (isAuth &&
         [RouteConstants.login, RouteConstants.register]
             .contains(state.matchedLocation)) {
-      return RouteConstants.home;
+      return RouteConstants.account;
+    }
+
+    // If the user is not logged in and trying to access any route except public routes
+    if (!isAuth && !publicRoutes.contains(state.matchedLocation)) {
+      return RouteConstants.login;
     }
 
     return null;

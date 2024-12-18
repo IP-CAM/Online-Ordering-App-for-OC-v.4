@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ordering_app/features/home/presentation/blocs/banner/banner_bloc.dart';
 
-class HomeBannerSlider extends StatelessWidget {
-  const HomeBannerSlider({super.key});
+class ManufacturersSlider extends StatelessWidget {
+  const ManufacturersSlider({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class HomeBannerSlider extends StatelessWidget {
 
         if (state is BannerSuccess && state.banners.isNotEmpty) {
           final slides = state.banners
-              .where((banner) => banner.name == 'Homepage Slideshow')
+              .where((banner) => banner.name == 'Homepage Manufacturers')
               .expand((banner) => banner.slides)
               .toList();
 
@@ -31,8 +31,8 @@ class HomeBannerSlider extends StatelessWidget {
             children: [
               CarouselSlider.builder(
                 options: CarouselOptions(
-                  height: 200,
-                  viewportFraction: 0.92,
+                  height: 100,
+                  viewportFraction: .5,
                   autoPlay: true,
                   enlargeCenterPage: true,
                   autoPlayInterval: const Duration(seconds: 5),

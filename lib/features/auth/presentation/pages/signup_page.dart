@@ -48,6 +48,9 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: const ThemeModeFAB(),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -260,6 +263,12 @@ class _SignUpPageState extends State<SignUpPage> {
                           message: "Registration was successful",
                           type: SnackBarType.success,
                         );
+                        NavigationService.pushReplacement(
+                          context,
+                          _nextPage,
+                        );
+                      }
+                      if(state is AuthInitialSuccess){
                         NavigationService.pushReplacement(
                           context,
                           _nextPage,

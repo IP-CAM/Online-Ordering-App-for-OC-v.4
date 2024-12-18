@@ -11,44 +11,37 @@ class FeaturedProducts extends StatelessWidget {
     return BlocBuilder<FeaturedProductsBloc, FeaturedProductsState>(
       builder: (context, state) {
         if (state is FeaturedProductsLoading) {
-          return SizedBox(
-            height: 200,
-            child: Center(
-              child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.primary,
-              ),
+          return Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).colorScheme.primary,
             ),
           );
         }
 
         if (state is FeaturedProductsSuccess && state.products.isNotEmpty) {
-          return SizedBox(
-            height: MediaQuery.of(context).size.height,
-  
-            child: GridView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              scrollDirection: Axis.vertical,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                childAspectRatio: 0.5,
-              ),
-              itemCount: state.products.length,
-              itemBuilder: (context, index) {
-                final product = state.products[index];
-                return Hero(
-                  tag: 'product_${product.productId}',
-                  child: ProductCard(
-                    product: product,
-                    onTap: () {
-                      // Implement navigation with hero animation
-                    },
-                  ),
-                );
-              },
+          return GridView.builder(
+            shrinkWrap: true, // Constrains the grid to its content
+            physics: const NeverScrollableScrollPhysics(), // Prevents independent scrolling
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              childAspectRatio: 0.5,
             ),
+            itemCount: state.products.length,
+            itemBuilder: (context, index) {
+              final product = state.products[index];
+              return Hero(
+                tag: 'product_${product.productId}',
+                child: ProductCard(
+                  product: product,
+                  onTap: () {
+                    // Implement navigation with hero animation
+                  },
+                ),
+              );
+            },
           );
         }
 

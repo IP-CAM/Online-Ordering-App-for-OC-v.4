@@ -18,6 +18,7 @@ class ProductDetails extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Column(
+        
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -28,19 +29,8 @@ class ProductDetails extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 4),
-         
-            Text(
-              product.description,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 4),
+          const SizedBox(height: 14),
 
-          const Spacer(),
           ProductPrice(product: product),
           if (showAddToCart) ...[
             const SizedBox(height: 4),
@@ -48,7 +38,7 @@ class ProductDetails extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton.icon(
                 onPressed: product.quantity > 0 ? () {
-                  showCustomSnackBar(context: context, message: "Product ${product.name} added to cart",type: SnackBarType.success,);
+                  showCustomSnackBar(context: context, message: "${product.name} added to cart",type: SnackBarType.success,);
                 } : null,
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
