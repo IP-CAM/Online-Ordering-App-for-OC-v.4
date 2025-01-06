@@ -6,6 +6,9 @@ class Urls {
   static const String logout = "auth|logout";
   static const String register = "auth|register";
   static const String validateToken = "auth|validateToken";
+  static const String deleteAccount = "auth|deleteAccount";
+  static const String forgotPassword = "auth|forgotPassword";
+  static const String resetPassword = "auth|resetPassword";
 
   // Menu
   static const String categories = "menu|categories";

@@ -21,4 +21,14 @@ abstract interface class AuthRepository {
     required bool newsletter,
   });
    Future<Either<Failure,LoginInfoEntity>> getLoginInfo();
+
+   Future<Either<Failure,String>> forgotPassword({required String email});
+   Future<Either<Failure,String>> deleteCustomer({
+    required String password,
+  });
+
+  Future<Either<Failure,String>> resetPassword({
+    required String password,
+    required String confirm,
+  });
 }

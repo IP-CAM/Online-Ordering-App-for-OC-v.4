@@ -35,6 +35,16 @@ abstract interface class AuthRemoteDataSource {
     required String customerToken,
     required String deviceId,
   });
+
+  Future<String> forgotPassword({required String email});
+
+  Future<String> deleteCustomer({
+    required String password,
+  });
+  Future<String> resetPassword({
+    required String password,
+    required String confirm,
+  });
 }
 
 /// Remote implementation of [AuthRemoteDataSource] using REST API
@@ -75,6 +85,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         'telephone': responseData['customer']['telephone'],
         'expiresAt': responseData['expires_at'],
       };
+
+      _webService.setAuthToken(responseData['token']);
 
       return LoginInfoModel.fromMap(authData);
     } catch (error, stackTrace) {
@@ -149,6 +161,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         'telephone': responseData['customer']['telephone'],
         'expiresAt': responseData['expires_at'],
       };
+      _webService.setAuthToken(responseData['token']);
 
       return LoginInfoModel.fromMap(authData);
     } catch (error, stackTrace) {
@@ -175,10 +188,88 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (response.error != null) {
         throw response.error.toString();
       }
-      debugPrint('Token validation ${response.data['valid'] == true ? 'Success' : 'Failed'}');
+      debugPrint(
+          'Token validation ${response.data['valid'] == true ? 'Success' : 'Failed'}');
+      if (response.data['valid'] == true) {
+        _webService.setAuthToken(customerToken);
+      }
       return response.data['valid'] == true;
     } catch (error, stackTrace) {
       debugPrint('Error validating token: $error');
+      debugPrint('Stack trace: $stackTrace');
+      throw AppException(error.toString());
+    }
+  }
+
+  @override
+  Future<String> forgotPassword({required String email}) async {
+    try {
+      final response = await _webService.post(
+        endpoint: Urls.forgotPassword,
+        body: {
+          'email': email,
+        },
+      );
+
+      if (response.error != null) {
+        throw response.error.toString();
+      }
+
+      return response.data['success'];
+    } catch (error, stackTrace) {
+      debugPrint('Error forgot password: $error');
+      debugPrint('Stack trace: $stackTrace');
+      throw AppException(error.toString());
+    }
+  }
+
+  @override
+  Future<String> deleteCustomer({required String password}) async {
+    try {
+      final response = await _webService.post(
+        endpoint: Urls.deleteAccount,
+        body: {
+          'password': password,
+        },
+      );
+
+      if (response.error != null) {
+        throw response.error.toString();
+      }
+      if (response.error != null) {
+        throw response.error.toString();
+      }
+
+      return response.data['success'];
+    } catch (error, stackTrace) {
+      debugPrint('Error delete customer: $error');
+      debugPrint('Stack trace: $stackTrace');
+      throw AppException(error.toString());
+    }
+  }
+
+  @override
+  Future<String> resetPassword(
+      {required String password, required String confirm}) async {
+    try {
+      final response = await _webService.post(
+        endpoint: Urls.resetPassword,
+        body: {
+          'password': password,
+          'confirm': confirm,
+        },
+      );
+
+      if (response.error != null) {
+        throw response.error.toString();
+      }
+      if (response.error != null) {
+        throw response.error.toString();
+      }
+
+      return response.data['success'];
+    } catch (error, stackTrace) {
+      debugPrint('Error reset password: $error');
       debugPrint('Stack trace: $stackTrace');
       throw AppException(error.toString());
     }

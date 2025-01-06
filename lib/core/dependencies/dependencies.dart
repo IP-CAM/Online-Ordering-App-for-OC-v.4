@@ -7,10 +7,13 @@ import 'package:ordering_app/features/auth/data/data_sources/auth_local_data_sou
 import 'package:ordering_app/features/auth/data/data_sources/auth_remote_data_source.dart';
 import 'package:ordering_app/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:ordering_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:ordering_app/features/auth/domain/use_cases/delete_account.dart';
 import 'package:ordering_app/features/auth/domain/use_cases/fetch_login_info.dart';
+import 'package:ordering_app/features/auth/domain/use_cases/forgot_password.dart';
 import 'package:ordering_app/features/auth/domain/use_cases/login.dart';
 import 'package:ordering_app/features/auth/domain/use_cases/logout.dart';
 import 'package:ordering_app/features/auth/domain/use_cases/register.dart';
+import 'package:ordering_app/features/auth/domain/use_cases/reset_password.dart';
 import 'package:ordering_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ordering_app/features/home/data/data_sources/home_local_data_source.dart';
 import 'package:ordering_app/features/home/data/data_sources/home_remote_data_source.dart';

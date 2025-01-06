@@ -1,14 +1,15 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ordering_app/core/common/cubits/cubit/auth_cubit.dart';
-import 'package:ordering_app/core/dependencies/dependencies.dart';
-import 'package:ordering_app/features/auth/presentation/pages/account_page.dart';
-import 'package:ordering_app/features/auth/presentation/pages/login_page.dart';
-import 'package:ordering_app/features/auth/presentation/pages/signup_page.dart';
-import 'package:ordering_app/features/home/presentation/pages/home_page.dart';
-import 'package:ordering_app/features/splash/presentation/pages/splash_page.dart';
+import 'package:ordering_app/features/address_book/presentation/pages/address_book_page.dart';
+import '../../core/common/cubits/cubit/auth_cubit.dart';
+import '../../core/dependencies/dependencies.dart';
+import '../../features/auth/presentation/pages/account_page.dart';
+import '../../features/auth/presentation/pages/login_page.dart';
+import '../../features/auth/presentation/pages/signup_page.dart';
+import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/splash/presentation/pages/splash_page.dart';
+import '../../features/navigation/presentation/pages/shell_page.dart';
 import 'route_constants.dart';
 
 class AppRouter {
@@ -33,29 +34,109 @@ class AppRouter {
     redirect: _globalRedirect,
     routes: [
       GoRoute(
+        path: RouteConstants.splash,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const SplashPage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+        ),
+      ),
+      GoRoute(
         path: RouteConstants.login,
-        name: 'login',
-        builder: (context, state) => const LoginPage(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const LoginPage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+        ),
       ),
       GoRoute(
         path: RouteConstants.register,
-        name: 'register',
-        builder: (context, state) => const SignUpPage(),
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const SignUpPage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+        ),
       ),
       GoRoute(
-        path: RouteConstants.home,
-        name: 'home',
-        builder: (context, state) => const HomePage(),
+        path: RouteConstants.addressBook,
+        pageBuilder: (context, state) => CustomTransitionPage(
+          key: state.pageKey,
+          child: const AddressBookPage(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+        ),
       ),
-      GoRoute(
-        path: RouteConstants.splash,
-        name: 'splash',
-        builder: (context, state) => const SplashPage(),
-      ),
-      GoRoute(
-        path: RouteConstants.account,
-        name: 'account',
-        builder: (context, state) => const AccountPage(),
+      ShellRoute(
+        builder: (context, state, child) => ShellPage(child: child),
+        routes: [
+          GoRoute(
+            path: RouteConstants.home,
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: const HomePage(),
+              transitionDuration: const Duration(milliseconds: 200),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+            ),
+          ),
+          GoRoute(
+            path: RouteConstants.menu,
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: const HomePage(),
+              transitionDuration: const Duration(milliseconds: 200),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+            ),
+          ),
+          GoRoute(
+            path: RouteConstants.cart,
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: const HomePage(),
+              transitionDuration: const Duration(milliseconds: 200),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+            ),
+          ),
+          GoRoute(
+            path: RouteConstants.about,
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: const HomePage(),
+              transitionDuration: const Duration(milliseconds: 200),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+            ),
+          ),
+          GoRoute(
+            path: RouteConstants.account,
+            pageBuilder: (context, state) => CustomTransitionPage(
+              key: state.pageKey,
+              child: const AccountPage(),
+              transitionDuration: const Duration(milliseconds: 200),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+            ),
+          ),
+        ],
       ),
     ],
     errorBuilder: (context, state) => Scaffold(
@@ -66,17 +147,17 @@ class AppRouter {
   );
 
   Future<String?> _globalRedirect(
-      BuildContext context, GoRouterState state) async {
+    BuildContext context,
+    GoRouterState state,
+  ) async {
     final isAuth = authCubit.state is AuthSuccess;
 
-    // If the user is logged in and trying to access login/register
     if (isAuth &&
         [RouteConstants.login, RouteConstants.register]
             .contains(state.matchedLocation)) {
       return RouteConstants.account;
     }
 
-    // If the user is not logged in and trying to access any route except public routes
     if (!isAuth && !publicRoutes.contains(state.matchedLocation)) {
       return RouteConstants.login;
     }
@@ -85,7 +166,6 @@ class AppRouter {
   }
 }
 
-// Custom RefreshListenable that converts a Stream to a Listenable
 class GoRouterRefreshStream extends ChangeNotifier {
   GoRouterRefreshStream(Stream<dynamic> stream) {
     notifyListeners();

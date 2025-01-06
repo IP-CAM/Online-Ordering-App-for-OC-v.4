@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:ordering_app/core/common/widgets/bottom_nav_bar.dart';
 import 'package:ordering_app/features/home/presentation/blocs/banner/banner_bloc.dart';
 import 'package:ordering_app/features/home/presentation/blocs/featured_products/featured_products_bloc.dart';
 import 'package:ordering_app/features/home/presentation/widgets/featured_products.dart';
 import 'package:ordering_app/features/home/presentation/widgets/home_banner_slider.dart';
 import 'package:ordering_app/features/home/presentation/widgets/manufacturers_slider.dart';
-import 'package:ordering_app/features/theme/presentation/widgets/theme_mode_fab.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -26,9 +25,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: const ThemeModeFAB(),
-      body: SafeArea(
+    return SafeArea(
         child: RefreshIndicator(
           onRefresh: () async {
             BlocProvider.of<BannerBloc>(context).add(FetchBannerEvent());
@@ -63,8 +60,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-      ),
-      bottomNavigationBar: const BottomNavBar(),
+      
     );
   }
 }

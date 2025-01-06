@@ -38,3 +38,24 @@ final class RegisterEvent extends AuthEvent {
 }
 
 final class FetchLoginInfoEvent extends AuthEvent {}
+final class DeleteAccountEvent extends AuthEvent {
+  final String password;
+
+  DeleteAccountEvent({required this.password});
+}
+
+final class ForgotPasswordEvent extends AuthEvent {
+  final String email;
+
+  ForgotPasswordEvent({required this.email});
+
+}
+
+final class ResetPasswordEvent extends AuthEvent {
+  final String password;
+  final String confirm;
+
+  ResetPasswordEvent({required this.password, required this.confirm});
+
+}
+

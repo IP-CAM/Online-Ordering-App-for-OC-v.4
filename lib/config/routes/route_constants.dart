@@ -10,6 +10,7 @@ class RouteConstants {
   static const String cart = '/cart';
   static const String about = '/about';
   static const String account = '/account';
+  static const String addressBook = '/address_book';
 
   
 

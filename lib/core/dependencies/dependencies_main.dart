@@ -95,6 +95,21 @@ void _injectAuth() {
         serviceLocator(),
       ),
     )
+    ..registerFactory(
+      () => DeleteAccount(
+        authRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => ForgotPassword(
+        authRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => ResetPassword(
+        authRepository: serviceLocator(),
+      ),
+    )
 // Blocs
     ..registerLazySingleton(
       () => AuthBloc(
@@ -103,6 +118,9 @@ void _injectAuth() {
         register: serviceLocator(),
         fetchLoginInfo: serviceLocator(),
         authCubit: serviceLocator(),
+        deleteAccount: serviceLocator(),
+        forgotPassword: serviceLocator(),
+        resetPassword: serviceLocator(),
       ),
     );
 }

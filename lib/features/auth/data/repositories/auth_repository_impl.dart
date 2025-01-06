@@ -40,10 +40,12 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final authInfo = await _authLocalDataSource.getLoginInfo();
 
-if(authInfo != null){
-      await _authRemoteDataSource.logout(customerToken: authInfo.token, deviceId: authInfo.deviceId,);
-
-}
+      if (authInfo != null) {
+        await _authRemoteDataSource.logout(
+          customerToken: authInfo.token,
+          deviceId: authInfo.deviceId,
+        );
+      }
       await _authLocalDataSource.logout();
 
       return right(null);
@@ -99,6 +101,50 @@ if(authInfo != null){
           return left(Failure('User session expired!'));
         }
       }
+      return right(res);
+    } on AppException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> deleteCustomer({
+    required String password,
+  }) async {
+    try {
+      final res = await _authRemoteDataSource.deleteCustomer(
+        password: password,
+      );
+      return right(res);
+    } on AppException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> forgotPassword({
+    required String email,
+  }) async {
+    try {
+      final res = await _authRemoteDataSource.forgotPassword(
+        email: email,
+      );
+      return right(res);
+    } on AppException catch (e) {
+      return left(Failure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> resetPassword({
+    required String password,
+    required String confirm,
+  }) async {
+    try {
+      final res = await _authRemoteDataSource.resetPassword(
+        password: password,
+        confirm: confirm,
+      );
       return right(res);
     } on AppException catch (e) {
       return left(Failure(e.message));

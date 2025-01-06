@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ordering_app/config/routes/route_constants.dart';
+import 'package:ordering_app/core/utils/form_dialog.dart';
 import 'package:ordering_app/core/utils/loader.dart';
 import 'package:ordering_app/core/utils/navigation_service.dart';
 import 'package:ordering_app/core/utils/show_snackbar.dart';
@@ -29,6 +30,32 @@ class _LoginPageState extends State<LoginPage> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _handleForgotPassword() {
+    void onPasswordConfirmed(String email) {
+      BlocProvider.of<AuthBloc>(context).add(ForgotPasswordEvent(email: email));
+    }
+
+    FormDialog.show(
+      context: context,
+      title: 'Forgot Password',
+      submitButtonText: 'Send reset link',
+      fields: const [
+        DynamicFormField(
+          label: 'Email',
+          isRequired: true,
+          key: 'email',
+          keyboardType: TextInputType.emailAddress,
+          validationRules: ValidationRules(
+            email: true,
+          ),
+        ),
+      ],
+      onConfirm: (results) {
+        onPasswordConfirmed(results['email'] ?? '');
+      },
+    );
   }
 
   @override
@@ -122,9 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
-                      onPressed: () {
-                        // Handle forgot password
-                      },
+                      onPressed: _handleForgotPassword,
                       child: const Text('Forgot Password?'),
                     ),
                   ),
@@ -155,6 +180,14 @@ class _LoginPageState extends State<LoginPage> {
                         Loader.show(context);
                       } else {
                         Loader.hide();
+                      }
+
+                      if (state is ForgotPasswordSuccess) {
+                        showCustomSnackBar(
+                          context: context,
+                          message: state.message,
+                          type: SnackBarType.success,
+                        );
                       }
                     },
                     child: ElevatedButton(
@@ -193,7 +226,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       TextButton(
                         onPressed: () {
-                          NavigationService.push(context, RouteConstants.register);
+                          NavigationService.push(
+                              context, RouteConstants.register);
                         },
                         child: const Text('Sign Up'),
                       ),
