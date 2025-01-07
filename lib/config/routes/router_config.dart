@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ordering_app/features/about/presentation/pages/about_page.dart';
 import 'package:ordering_app/features/address_book/domain/entities/address_entity.dart';
 import 'package:ordering_app/features/address_book/presentation/pages/address_book_page.dart';
 import 'package:ordering_app/features/address_book/presentation/pages/address_details_page.dart';
@@ -145,7 +146,7 @@ class AppRouter {
             path: RouteConstants.about,
             pageBuilder: (context, state) => CustomTransitionPage(
               key: state.pageKey,
-              child: const HomePage(),
+              child: const AboutPage(),
               transitionDuration: const Duration(milliseconds: 200),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {

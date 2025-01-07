@@ -21,6 +21,7 @@ Future<void> injectDependencies() async {
   _injectAuth();
   _injectSplash();
   _injectAddressBook();
+  _injectAbout();
 }
 
 void _injectCore() {
@@ -302,6 +303,34 @@ void _injectAddressBook() {
         fetchZoneList: serviceLocator(),
         deleteAddress: serviceLocator(),
         saveAddress: serviceLocator(),
+      ),
+    );
+}
+
+void _injectAbout() {
+// Data sources
+  serviceLocator
+    ..registerFactory<AboutRemoteDataSource>(
+      () => AboutRemoteDataSourceImpl(
+        cachedWebService: serviceLocator(),
+      ),
+    )
+// Repositories
+    ..registerFactory<AboutRepository>(
+      () => AboutRepositoryImpl(
+        aboutRemoteDataSource: serviceLocator(),
+      ),
+    )
+// Use cases
+    ..registerFactory(
+      () => FetchInfo(
+        aboutRepository: serviceLocator(),
+      ),
+    )
+// Blocs
+    ..registerLazySingleton(
+      () => InfoBloc(
+        fetchInfo: serviceLocator(),
       ),
     );
 }

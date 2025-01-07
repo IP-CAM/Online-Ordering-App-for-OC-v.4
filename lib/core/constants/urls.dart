@@ -29,5 +29,7 @@ class Urls {
   static const String saveAddress = 'address|save';
   static const String delete = 'address|delete';
 
-   
+  // About
+
+  static const String storeInfo = 'about|info';
 }
