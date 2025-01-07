@@ -2,7 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:ordering_app/core/errors/exceptions.dart';
 import 'package:ordering_app/core/errors/failures.dart';
 import 'package:ordering_app/features/about/data/data_sources/about_remote_data_source.dart';
-import 'package:ordering_app/features/about/domain/entities/info_entity.dart';
+import 'package:ordering_app/features/about/data/models/info_model.dart';
 import 'package:ordering_app/features/about/domain/repositories/about_repository.dart';
 
 class AboutRepositoryImpl implements AboutRepository {
@@ -11,7 +11,7 @@ class AboutRepositoryImpl implements AboutRepository {
   AboutRepositoryImpl({required AboutRemoteDataSource aboutRemoteDataSource})
       : _aboutRemoteDataSource = aboutRemoteDataSource;
   @override
-  Future<Either<Failure, InfoEntity>> getInfo() async {
+  Future<Either<Failure, InfoModel>> getInfo() async {
     try {
       final res = await _aboutRemoteDataSource.getInfo();
       return right(res);

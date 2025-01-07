@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ordering_app/core/common/entities/product_entity.dart';
 import 'package:ordering_app/core/utils/show_snackbar.dart';
-import 'package:ordering_app/features/home/presentation/widgets/product_price.dart';
+import 'package:ordering_app/features/menu/presentation/widgets/product_price.dart';
 
 class ProductDetails extends StatelessWidget {
   final ProductEntity product;

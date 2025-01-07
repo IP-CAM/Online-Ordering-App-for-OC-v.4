@@ -11,6 +11,7 @@ import 'package:ordering_app/features/address_book/presentation/blocs/address_bo
 import 'package:ordering_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ordering_app/features/home/presentation/blocs/banner/banner_bloc.dart';
 import 'package:ordering_app/features/home/presentation/blocs/featured_products/featured_products_bloc.dart';
+import 'package:ordering_app/features/menu/presentation/blocs/menu/menu_bloc.dart';
 import 'package:ordering_app/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:ordering_app/features/theme/presentation/bloc/theme_bloc.dart';
 import 'package:flutter/services.dart';
@@ -61,6 +62,9 @@ class AppRoot extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => serviceLocator<InfoBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => serviceLocator<MenuBloc>(),
         ),
       ],
       child: const MyApp(),

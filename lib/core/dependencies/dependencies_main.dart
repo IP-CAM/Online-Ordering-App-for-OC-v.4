@@ -22,6 +22,7 @@ Future<void> injectDependencies() async {
   _injectSplash();
   _injectAddressBook();
   _injectAbout();
+  _injectMenu();
 }
 
 void _injectCore() {
@@ -213,13 +214,7 @@ void _injectSplash() {
 void _injectHome() {
 // Data sources
 
-  serviceLocator
-    ..registerFactory<HomeLocalDataSource>(
-      () => HomeLocalDataSourceImpl(
-        db: serviceLocator(),
-      ),
-    )
-    ..registerFactory<HomeRemoteDataSource>(
+   serviceLocator ..registerFactory<HomeRemoteDataSource>(
       () => HomeRemoteDataSourceImpl(
         webService: serviceLocator(),
       ),
@@ -228,7 +223,7 @@ void _injectHome() {
 // Repositories
     ..registerFactory<HomeRepository>(
       () => HomeRepositoryImpl(
-        homeLocalDataSource: serviceLocator(),
+        menuLocalDataSource: serviceLocator(),
         homeRemoteDataSource: serviceLocator(),
       ),
     )
@@ -331,6 +326,42 @@ void _injectAbout() {
     ..registerLazySingleton(
       () => InfoBloc(
         fetchInfo: serviceLocator(),
+      ),
+    );
+}
+
+void _injectMenu() {
+// Data sources
+
+  serviceLocator
+    ..registerFactory<MenuLocalDataSource>(
+      () => MenuLocalDataSourceImpl(
+        databaseHelper: serviceLocator(),
+      ),
+    )
+
+// Repositories
+    ..registerFactory<MenuRepository>(
+      () => MenuRepositoryImpl(
+        menuLocalDataSource: serviceLocator(),
+      ),
+    )
+// Use cases
+    ..registerFactory(
+      () => FetchCategories(
+        menuRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => FetchProducts(
+        menuRepository: serviceLocator(),
+      ),
+    )
+// Blocs
+    ..registerLazySingleton(
+      () => MenuBloc(
+        fetchCategories: serviceLocator(),
+        fetchProducts: serviceLocator(),
       ),
     );
 }

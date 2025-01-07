@@ -2,9 +2,9 @@ import 'package:fpdart/fpdart.dart';
 import 'package:ordering_app/core/errors/exceptions.dart';
 import 'package:ordering_app/core/errors/failures.dart';
 import 'package:ordering_app/features/address_book/data/data_sources/address_book_remote_data_source.dart';
-import 'package:ordering_app/features/address_book/domain/entities/address_entity.dart';
-import 'package:ordering_app/features/address_book/domain/entities/country_entity.dart';
-import 'package:ordering_app/features/address_book/domain/entities/zone_entity.dart';
+import 'package:ordering_app/features/address_book/data/models/address_model.dart';
+import 'package:ordering_app/features/address_book/data/models/country_model.dart';
+import 'package:ordering_app/features/address_book/data/models/zone_model.dart';
 import 'package:ordering_app/features/address_book/domain/repositories/address_book_repository.dart';
 
 class AddressBookRepositoryImpl implements AddressBookRepository {
@@ -13,8 +13,9 @@ class AddressBookRepositoryImpl implements AddressBookRepository {
   AddressBookRepositoryImpl(
       {required AddressBookRemoteDataSource addressBookRemoteDataSource})
       : _addressBookRemoteDataSource = addressBookRemoteDataSource;
+
   @override
-  Future<Either<Failure, List<AddressEntity>>> getAddressList() async {
+  Future<Either<Failure, List<AddressModel>>> getAddressList() async {
     try {
       final res = await _addressBookRemoteDataSource.getAddressList();
       return right(res);
@@ -24,7 +25,7 @@ class AddressBookRepositoryImpl implements AddressBookRepository {
   }
 
   @override
-  Future<Either<Failure, List<CountryEntity>>> getCountryList() async {
+  Future<Either<Failure, List<CountryModel>>> getCountryList() async {
     try {
       final res = await _addressBookRemoteDataSource.getCountryList();
       return right(res);
@@ -34,7 +35,7 @@ class AddressBookRepositoryImpl implements AddressBookRepository {
   }
 
   @override
-  Future<Either<Failure, List<ZoneEntity>>> getZoneList({
+  Future<Either<Failure, List<ZoneModel>>> getZoneList({
     required int countryId,
   }) async {
     try {

@@ -1,11 +1,11 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:ordering_app/core/common/models/category_model.dart';
 import 'package:ordering_app/core/common/models/product_model.dart';
 import 'package:ordering_app/core/constants/db_constants.dart';
 import 'package:ordering_app/core/errors/exceptions.dart';
 import 'package:ordering_app/core/utils/database_helper.dart';
 
-abstract interface class HomeLocalDataSource {
+abstract interface class MenuLocalDataSource {
   Future<List<CategoryModel>> getCategories();
 
   Future<List<ProductModel>> getProductsByIds({
@@ -13,11 +13,11 @@ abstract interface class HomeLocalDataSource {
   });
 }
 
-class HomeLocalDataSourceImpl implements HomeLocalDataSource {
+class MenuLocalDataSourceImpl implements MenuLocalDataSource {
   final DatabaseHelper _databaseHelper;
 
-  const HomeLocalDataSourceImpl({required DatabaseHelper db})
-      : _databaseHelper = db;
+  MenuLocalDataSourceImpl({required DatabaseHelper databaseHelper})
+      : _databaseHelper = databaseHelper;
 
   @override
   Future<List<CategoryModel>> getCategories() async {

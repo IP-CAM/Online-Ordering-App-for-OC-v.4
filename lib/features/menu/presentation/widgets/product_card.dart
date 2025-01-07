@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ordering_app/core/common/entities/product_entity.dart';
-import 'package:ordering_app/features/home/presentation/widgets/product_details.dart';
-import 'package:ordering_app/features/home/presentation/widgets/product_image.dart';
+import 'package:ordering_app/features/menu/presentation/widgets/product_details.dart';
+import 'package:ordering_app/features/menu/presentation/widgets/product_image.dart';
 
 class ProductCard extends StatelessWidget {
   final ProductEntity product;

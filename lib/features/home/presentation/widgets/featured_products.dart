@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ordering_app/features/home/presentation/blocs/featured_products/featured_products_bloc.dart';
-import 'package:ordering_app/features/home/presentation/widgets/product_card.dart';
+import 'package:ordering_app/features/menu/presentation/widgets/product_card.dart';
 
 class FeaturedProducts extends StatelessWidget {
   const FeaturedProducts({super.key});

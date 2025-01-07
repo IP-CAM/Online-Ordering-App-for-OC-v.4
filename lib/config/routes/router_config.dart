@@ -5,6 +5,8 @@ import 'package:ordering_app/features/about/presentation/pages/about_page.dart';
 import 'package:ordering_app/features/address_book/domain/entities/address_entity.dart';
 import 'package:ordering_app/features/address_book/presentation/pages/address_book_page.dart';
 import 'package:ordering_app/features/address_book/presentation/pages/address_details_page.dart';
+import 'package:ordering_app/features/menu/presentation/pages/menu_page.dart';
+import 'package:ordering_app/features/menu/presentation/pages/product_list_page.dart';
 import '../../core/common/cubits/cubit/auth_cubit.dart';
 import '../../core/dependencies/dependencies.dart';
 import '../../features/auth/presentation/pages/account_page.dart';
@@ -27,6 +29,8 @@ class AppRouter {
     RouteConstants.home,
     RouteConstants.splash,
     RouteConstants.menu,
+    RouteConstants.products,
+    RouteConstants.productView,
     RouteConstants.about,
   ];
 
@@ -103,6 +107,33 @@ class AppRouter {
           );
         },
       ),
+            GoRoute(
+        path: RouteConstants.products,
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          // Extract address from state.extra safely
+          final Map<String, dynamic>? extras =
+              state.extra as Map<String, dynamic>?;
+          final List<int> products = extras?['products'] as List<int>;
+
+          return CustomTransitionPage<void>(
+            key: state.pageKey,
+            child: ProductListPage(
+              productIds: products,
+            ),
+            transitionsBuilder: (
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child,
+            ) {
+              return FadeTransition(
+                opacity: CurveTween(curve: Curves.easeInOut).animate(animation),
+                child: child,
+              );
+            },
+          );
+        },
+      ),
       ShellRoute(
         builder: (context, state, child) => ShellPage(child: child),
         routes: [
@@ -122,7 +153,7 @@ class AppRouter {
             path: RouteConstants.menu,
             pageBuilder: (context, state) => CustomTransitionPage(
               key: state.pageKey,
-              child: const HomePage(),
+              child: const MenuPage(),
               transitionDuration: const Duration(milliseconds: 200),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {

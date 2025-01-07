@@ -74,7 +74,7 @@ class CategoryModel extends CategoryEntity {
       description: map['description'] as String?,
       image: map['image'] as String?,
       sortOrder: (map['sortOrder'] ?? 0) as int,
-      status: map['status'] == 1, // Convert integer to boolean
+      status: map['status'] is bool ? map['status'] : map['status'] == 1, // Convert integer to boolean
       productCount: (map['productCount'] ?? 0) as int,
       products: decodeProductList(map['products']),
       parentId: (map['parentId'] ?? 0) as int,
