@@ -25,7 +25,7 @@ class NavigationService {
   static void pushWithQuery(
     BuildContext context,
     String location,
-    Map<String, String> queryParams,
+    Map<String, dynamic> queryParams,
   ) {
     context.push(location, extra: queryParams);
   }

@@ -65,7 +65,7 @@ class AppColors {
     analogousColors = ColorGenerator.generateAnalogousColors(primary);
 
     // Generate semantic colors
-    error = const Color(0xFFB00020);
+    error = const Color.fromARGB(255, 218, 32, 66);
     success = ColorGenerator.generateSaturationVariant(
       const Color(0xFF4CAF50),
       amount: 0.1,

@@ -6,6 +6,7 @@ import 'package:ordering_app/config/theme/app_theme.dart';
 import 'package:ordering_app/core/common/cubits/cubit/auth_cubit.dart';
 import 'package:ordering_app/core/dependencies/dependencies.dart';
 import 'package:ordering_app/core/database/migrations.dart';
+import 'package:ordering_app/features/address_book/presentation/blocs/address_book/address_book_bloc.dart';
 import 'package:ordering_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:ordering_app/features/home/presentation/blocs/banner/banner_bloc.dart';
 import 'package:ordering_app/features/home/presentation/blocs/featured_products/featured_products_bloc.dart';
@@ -53,6 +54,9 @@ class AppRoot extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => serviceLocator<FeaturedProductsBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => serviceLocator<AddressBookBloc>(),
         ),
       ],
       child: const MyApp(),

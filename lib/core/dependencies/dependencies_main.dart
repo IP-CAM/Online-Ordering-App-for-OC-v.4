@@ -1,16 +1,26 @@
 part of 'dependencies.dart';
 
 final GetIt serviceLocator = GetIt.instance;
-final DatabaseHelper _databaseHelper = DatabaseHelper();
-final WebService _webService = WebService();
-final CachedWebService _cachedWebService = CachedWebService();
+
 Future<void> injectDependencies() async {
+  serviceLocator
+    ..registerLazySingleton(
+      () => DatabaseHelper(),
+    )
+    ..registerLazySingleton(
+      () => WebService(),
+    )
+    ..registerLazySingleton(
+      () => CachedWebService(),
+    );
+
   // _injectOnBoarding();
   _injectHome();
   _injectCore();
   _injectTheme();
   _injectAuth();
   _injectSplash();
+  _injectAddressBook();
 }
 
 void _injectCore() {
@@ -25,7 +35,7 @@ void _injectTheme() {
   serviceLocator
     ..registerFactory<ThemeLocalDataSource>(
       () => ThemeLocalDataSourceImpl(
-        databaseHelper: _databaseHelper,
+        databaseHelper: serviceLocator(),
       ),
     )
 
@@ -61,11 +71,13 @@ void _injectAuth() {
   serviceLocator
     ..registerFactory<AuthRemoteDataSource>(
       () => AuthRemoteDataSourceImpl(
-        webService: _webService,
+        webService: serviceLocator(),
       ),
     )
     ..registerFactory<AuthLocalDataSource>(
-      () => AuthLocalDataSourceImpl(_databaseHelper),
+      () => AuthLocalDataSourceImpl(
+        serviceLocator(),
+      ),
     )
 // Repositories
     ..registerFactory<AuthRepository>(
@@ -130,11 +142,13 @@ void _injectSplash() {
   serviceLocator
     ..registerFactory<SplashLocalDataSource>(
       () => SplashLocalDataSourceImpl(
-        db: _databaseHelper,
+        db: serviceLocator(),
       ),
     )
     ..registerFactory<SplashRemoteDataSource>(
-      () => SplashRemoteDataSourceImpl(webService: _webService),
+      () => SplashRemoteDataSourceImpl(
+        webService: serviceLocator(),
+      ),
     )
 
 // Repositories
@@ -201,11 +215,13 @@ void _injectHome() {
   serviceLocator
     ..registerFactory<HomeLocalDataSource>(
       () => HomeLocalDataSourceImpl(
-        db: _databaseHelper,
+        db: serviceLocator(),
       ),
     )
     ..registerFactory<HomeRemoteDataSource>(
-      () => HomeRemoteDataSourceImpl(webService: _cachedWebService),
+      () => HomeRemoteDataSourceImpl(
+        webService: serviceLocator(),
+      ),
     )
 
 // Repositories
@@ -237,6 +253,55 @@ void _injectHome() {
     ..registerLazySingleton(
       () => FeaturedProductsBloc(
         fetchFeaturedProducts: serviceLocator(),
+      ),
+    );
+}
+
+void _injectAddressBook() {
+// Data sources
+
+  serviceLocator
+    ..registerFactory<AddressBookRemoteDataSource>(
+      () => AddressBookRemoteDataSourceImpl(
+        webService: serviceLocator(),
+      ),
+    )
+
+// Repositories
+
+    ..registerFactory<AddressBookRepository>(
+      () => AddressBookRepositoryImpl(
+          addressBookRemoteDataSource: serviceLocator()),
+    )
+
+// Use cases
+
+    ..registerFactory(
+      () => FetchAddressList(addressBookRepository: serviceLocator()),
+    )
+    ..registerFactory(
+      () => FetchCountryList(addressBookRepository: serviceLocator()),
+    )
+    ..registerFactory(
+      () => FetchZoneList(addressBookRepository: serviceLocator()),
+    )
+    ..registerFactory(
+      () => SaveAddress(
+        addressBookRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => DeleteAddress(addressBookRepository: serviceLocator()),
+    )
+
+// Blocs
+    ..registerLazySingleton(
+      () => AddressBookBloc(
+        fetchCountryList: serviceLocator(),
+        fetchAddressList: serviceLocator(),
+        fetchZoneList: serviceLocator(),
+        deleteAddress: serviceLocator(),
+        saveAddress: serviceLocator(),
       ),
     );
 }

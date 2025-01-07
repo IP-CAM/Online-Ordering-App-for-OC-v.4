@@ -20,5 +20,14 @@ class Urls {
 
   // Home
   static const String banner = 'home|banner';
+
+  // Address book
+
+  static const String addressList = 'address|list';
+  static const String countryList = 'address|countries';
+  static const String country = 'address|country';
+  static const String saveAddress = 'address|save';
+  static const String delete = 'address|delete';
+
    
 }

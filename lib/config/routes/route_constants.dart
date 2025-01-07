@@ -11,6 +11,7 @@ class RouteConstants {
   static const String about = '/about';
   static const String account = '/account';
   static const String addressBook = '/address_book';
+  static const String addressDetailsPage = '/address_details_page';
 
   
 

@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ordering_app/features/address_book/domain/entities/address_entity.dart';
 import 'package:ordering_app/features/address_book/presentation/pages/address_book_page.dart';
+import 'package:ordering_app/features/address_book/presentation/pages/address_details_page.dart';
 import '../../core/common/cubits/cubit/auth_cubit.dart';
 import '../../core/dependencies/dependencies.dart';
 import '../../features/auth/presentation/pages/account_page.dart';
@@ -72,6 +74,33 @@ class AppRouter {
             return FadeTransition(opacity: animation, child: child);
           },
         ),
+      ),
+      GoRoute(
+        path: RouteConstants.addressDetailsPage,
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          // Extract address from state.extra safely
+          final Map<String, dynamic>? extras =
+              state.extra as Map<String, dynamic>?;
+          final AddressEntity? address = extras?['address'] as AddressEntity?;
+
+          return CustomTransitionPage<void>(
+            key: state.pageKey,
+            child: AddressDetailsPage(
+              address: address,
+            ),
+            transitionsBuilder: (
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child,
+            ) {
+              return FadeTransition(
+                opacity: CurveTween(curve: Curves.easeInOut).animate(animation),
+                child: child,
+              );
+            },
+          );
+        },
       ),
       ShellRoute(
         builder: (context, state, child) => ShellPage(child: child),
