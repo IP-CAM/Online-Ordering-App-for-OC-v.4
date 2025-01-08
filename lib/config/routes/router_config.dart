@@ -6,6 +6,7 @@ import 'package:ordering_app/features/about/presentation/pages/about_page.dart';
 import 'package:ordering_app/features/address_book/domain/entities/address_entity.dart';
 import 'package:ordering_app/features/address_book/presentation/pages/address_book_page.dart';
 import 'package:ordering_app/features/address_book/presentation/pages/address_details_page.dart';
+import 'package:ordering_app/features/cart/presentation/pages/cart_page.dart';
 import 'package:ordering_app/features/menu/presentation/pages/menu_page.dart';
 import 'package:ordering_app/features/menu/presentation/pages/product_list_page.dart';
 import 'package:ordering_app/features/menu/presentation/pages/product_view_page.dart';
@@ -194,7 +195,7 @@ class AppRouter {
             path: RouteConstants.cart,
             pageBuilder: (context, state) => CustomTransitionPage(
               key: state.pageKey,
-              child: const HomePage(),
+              child: const CartPage(),
               transitionDuration: const Duration(milliseconds: 200),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {

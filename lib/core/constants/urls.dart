@@ -36,6 +36,9 @@ class Urls {
   // Cart
 
   static const String addToCart = 'cart|add';
+  static const String getCart = 'cart|items';
+  static const String updateCart = 'cart|update';
+  static const String deleteCart = 'cart|remove';
 
 
 }

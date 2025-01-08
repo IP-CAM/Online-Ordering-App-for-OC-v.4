@@ -9,6 +9,7 @@ import 'package:ordering_app/core/database/migrations.dart';
 import 'package:ordering_app/features/about/presentation/blocs/info/info_bloc.dart';
 import 'package:ordering_app/features/address_book/presentation/blocs/address_book/address_book_bloc.dart';
 import 'package:ordering_app/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:ordering_app/features/cart/presentation/blocs/cart/cart_bloc.dart';
 import 'package:ordering_app/features/home/presentation/blocs/banner/banner_bloc.dart';
 import 'package:ordering_app/features/home/presentation/blocs/featured_products/featured_products_bloc.dart';
 import 'package:ordering_app/features/menu/presentation/blocs/menu/menu_bloc.dart';
@@ -40,10 +41,10 @@ class AppRoot extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => serviceLocator<ThemeBloc>()..add(FetchThemeEvent()),
+          create: (_) => serviceLocator<ThemeBloc>(),
         ),
         BlocProvider(
-          create: (_) => serviceLocator<AuthBloc>()..add(FetchLoginInfoEvent()),
+          create: (_) => serviceLocator<AuthBloc>(),
         ),
         BlocProvider(
           create: (_) => serviceLocator<AuthCubit>(),
@@ -66,20 +67,35 @@ class AppRoot extends StatelessWidget {
         BlocProvider(
           create: (_) => serviceLocator<MenuBloc>(),
         ),
+        BlocProvider(
+          create: (_) => serviceLocator<CartBloc>(),
+        ),
       ],
       child: const MyApp(),
     );
   }
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   ThemeMode _resolveThemeMode(ThemeState state) {
     if (state is ThemeSuccess) {
       return state.theme.isDarkMode ? ThemeMode.dark : ThemeMode.light;
     }
     return ThemeMode.system;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<ThemeBloc>(context).add(FetchThemeEvent());
+    BlocProvider.of<AuthBloc>(context).add(FetchLoginInfoEvent());
   }
 
   @override

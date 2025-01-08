@@ -23,6 +23,7 @@ Future<void> injectDependencies() async {
   _injectAddressBook();
   _injectAbout();
   _injectMenu();
+  _injectCart();
 }
 
 void _injectCore() {
@@ -375,6 +376,46 @@ void _injectMenu() {
         fetchCategories: serviceLocator(),
         fetchProducts: serviceLocator(),
         addToCart: serviceLocator(),
+      ),
+    );
+}
+
+void _injectCart() {
+// Data sources
+  serviceLocator
+    ..registerFactory<CartRemoteDataSource>(
+      () => CartRemoteDataSourceImpl(
+        webService: serviceLocator(),
+      ),
+    )
+// Repositories
+    ..registerFactory<CartRepository>(
+      () => CartRepositoryImpl(
+        cartRemoteDataSource: serviceLocator(),
+      ),
+    )
+// Use cases
+    ..registerFactory(
+      () => FetchCart(
+        cartRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => UpdateCart(
+        cartRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => RemoveItem(
+        cartRepository: serviceLocator(),
+      ),
+    )
+// Blocs
+    ..registerLazySingleton(
+      () => CartBloc(
+        fetchCart: serviceLocator(),
+        removeItem: serviceLocator(),
+        updateCart: serviceLocator(),
       ),
     );
 }

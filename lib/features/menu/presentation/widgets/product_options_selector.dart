@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ordering_app/core/common/entities/product_option_entity.dart';
+import 'package:ordering_app/core/utils/helpers.dart';
 
 class ProductOptionsSelector extends StatelessWidget {
   final List<ProductOptionEntity> options;
@@ -20,7 +21,7 @@ class ProductOptionsSelector extends StatelessWidget {
         return DropdownButtonFormField<String>(
           value: selectedOptions[option.productOptionId]?.firstOrNull,
           decoration: InputDecoration(
-            labelText: '${option.name}${option.required == "1" ? " *" : ""}',
+            labelText: '${decodeHtmlEntities(option.name)}${option.required == "1" ? " *" : ""}',
           ),
           items: option.optionValue.map((value) {
             String priceText = '';
@@ -44,7 +45,7 @@ class ProductOptionsSelector extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${option.name}${option.required == "1" ? " *" : ""}',
+              '${decodeHtmlEntities(option.name)}${option.required == "1" ? " *" : ""}',
               style: theme.textTheme.titleSmall,
             ),
             const SizedBox(height: 8),
@@ -74,7 +75,7 @@ class ProductOptionsSelector extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${option.name}${option.required == "1" ? " *" : ""}',
+              '${decodeHtmlEntities(option.name)}${option.required == "1" ? " *" : ""}',
               style: theme.textTheme.titleSmall,
             ),
             const SizedBox(height: 8),
@@ -112,7 +113,7 @@ class ProductOptionsSelector extends StatelessWidget {
         return TextFormField(
           initialValue: selectedOptions[option.productOptionId]?.firstOrNull,
           decoration: InputDecoration(
-            labelText: '${option.name}${option.required == "1" ? " *" : ""}',
+            labelText: '${decodeHtmlEntities(option.name)}${option.required == "1" ? " *" : ""}',
             hintText:
                 option.defaultValue.isNotEmpty ? option.defaultValue : null,
           ),
@@ -125,7 +126,7 @@ class ProductOptionsSelector extends StatelessWidget {
         return TextFormField(
           initialValue: selectedOptions[option.productOptionId]?.firstOrNull,
           decoration: InputDecoration(
-            labelText: '${option.name}${option.required == "1" ? " *" : ""}',
+            labelText: '${decodeHtmlEntities(option.name)}${option.required == "1" ? " *" : ""}',
             hintText:
                 option.defaultValue.isNotEmpty ? option.defaultValue : null,
           ),
@@ -140,7 +141,7 @@ class ProductOptionsSelector extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${option.name}${option.required == "1" ? " *" : ""}',
+              '${decodeHtmlEntities(option.name)}${option.required == "1" ? " *" : ""}',
               style: theme.textTheme.titleSmall,
             ),
             const SizedBox(height: 8),
@@ -163,7 +164,7 @@ class ProductOptionsSelector extends StatelessWidget {
             text: selectedOptions[option.productOptionId]?.firstOrNull ?? '',
           ),
           decoration: InputDecoration(
-            labelText: '${option.name}${option.required == "1" ? " *" : ""}',
+            labelText: '${decodeHtmlEntities(option.name)}${option.required == "1" ? " *" : ""}',
             suffixIcon: const Icon(Icons.calendar_today),
           ),
           readOnly: true,
@@ -191,7 +192,7 @@ class ProductOptionsSelector extends StatelessWidget {
             text: selectedOptions[option.productOptionId]?.firstOrNull ?? '',
           ),
           decoration: InputDecoration(
-            labelText: '${option.name}${option.required == "1" ? " *" : ""}',
+            labelText: '${decodeHtmlEntities(option.name)}${option.required == "1" ? " *" : ""}',
             suffixIcon: const Icon(Icons.access_time),
           ),
           readOnly: true,
@@ -217,7 +218,7 @@ class ProductOptionsSelector extends StatelessWidget {
             text: selectedOptions[option.productOptionId]?.firstOrNull ?? '',
           ),
           decoration: InputDecoration(
-            labelText: '${option.name}${option.required == "1" ? " *" : ""}',
+            labelText: '${decodeHtmlEntities(option.name)}${option.required == "1" ? " *" : ""}',
             suffixIcon: const Icon(Icons.event),
           ),
           readOnly: true,
