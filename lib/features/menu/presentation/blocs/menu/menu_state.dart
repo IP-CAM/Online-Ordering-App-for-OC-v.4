@@ -20,3 +20,9 @@ final class ProductsSuccess extends MenuState {
 
   ProductsSuccess({required this.products});
 }
+
+final class AddToCartSuccess extends MenuState{
+  final String message;
+
+  AddToCartSuccess({required this.message});
+}

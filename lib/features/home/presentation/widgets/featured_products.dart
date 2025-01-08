@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ordering_app/config/routes/route_constants.dart';
+import 'package:ordering_app/core/utils/navigation_service.dart';
 import 'package:ordering_app/features/home/presentation/blocs/featured_products/featured_products_bloc.dart';
 import 'package:ordering_app/features/menu/presentation/widgets/product_card.dart';
 
@@ -37,7 +39,7 @@ class FeaturedProducts extends StatelessWidget {
                 child: ProductCard(
                   product: product,
                   onTap: () {
-                    // Implement navigation with hero animation
+                    NavigationService.pushWithQuery(context, RouteConstants.productView, {'product':product});
                   },
                 ),
               );

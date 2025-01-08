@@ -32,4 +32,10 @@ class Urls {
   // About
 
   static const String storeInfo = 'about|info';
+
+  // Cart
+
+  static const String addToCart = 'cart|add';
+
+
 }

@@ -30,11 +30,9 @@ class ImageUtils {
     Widget Function()? placeholderBuilder,
     double placeholderSize = 50,
   }) {
-    debugPrint('Attempting to load image URL: "$imageUrl"');
 
     // Handle null, empty or whitespace-only URL
     if (imageUrl == null || imageUrl.trim().isEmpty) {
-      debugPrint('Image URL is null or empty');
       return _buildDefaultPlaceholder(
         width: width,
         height: height,
@@ -45,11 +43,9 @@ class ImageUtils {
     }
 
     final trimmedUrl = imageUrl.trim();
-    debugPrint('Trimmed URL: "$trimmedUrl"');
 
     // Handle file:/// URLs
     if (trimmedUrl.startsWith('file:///')) {
-      debugPrint('Detected file:/// URL - not supported');
       return _buildDefaultPlaceholder(
         width: width,
         height: height,
@@ -61,11 +57,9 @@ class ImageUtils {
 
     // Handle URLs without protocol
     if (!trimmedUrl.startsWith('http://') && !trimmedUrl.startsWith('https://')) {
-      debugPrint('URL missing protocol - attempting to add https://');
       // Remove any leading slashes and add https://
       final cleanUrl = trimmedUrl.replaceAll(RegExp(r'^/*'), '');
       final urlWithProtocol = 'https://$cleanUrl';
-      debugPrint('Converted URL: $urlWithProtocol');
 
       try {
         return Image.network(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ordering_app/config/routes/route_constants.dart';
 import 'package:ordering_app/core/common/entities/product_entity.dart';
 import 'package:ordering_app/core/utils/loader.dart';
+import 'package:ordering_app/core/utils/navigation_service.dart';
 import 'package:ordering_app/features/menu/presentation/blocs/menu/menu_bloc.dart';
 import 'package:ordering_app/features/menu/presentation/widgets/product_card.dart';
 import 'package:ordering_app/features/theme/presentation/widgets/theme_mode_fab.dart';
@@ -75,7 +77,7 @@ class _ProductListPageState extends State<ProductListPage> {
                 child: ProductCard(
                   product: product,
                   onTap: () {
-                    // Implement navigation with hero animation
+                    NavigationService.pushWithQuery(context, RouteConstants.productView, {'product':product});
                   },
                 ),
               );

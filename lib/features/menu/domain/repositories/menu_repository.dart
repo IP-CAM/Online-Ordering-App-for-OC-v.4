@@ -8,4 +8,7 @@ abstract interface class MenuRepository {
   Future<Either<Failure, List<ProductEntity>>> getProductsByIds({
     required List<int> productIds,
   });
+  Future<Either<Failure,String>> addToCart({
+    required Map<String, dynamic> cartData,
+  });
 }

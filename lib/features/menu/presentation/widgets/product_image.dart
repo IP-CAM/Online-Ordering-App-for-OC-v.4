@@ -15,7 +15,6 @@ class ProductImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('ProductImage build - Image URL: "${product.image}"');
 
     return Stack(
       children: [

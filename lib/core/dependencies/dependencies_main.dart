@@ -214,7 +214,8 @@ void _injectSplash() {
 void _injectHome() {
 // Data sources
 
-   serviceLocator ..registerFactory<HomeRemoteDataSource>(
+  serviceLocator
+    ..registerFactory<HomeRemoteDataSource>(
       () => HomeRemoteDataSourceImpl(
         webService: serviceLocator(),
       ),
@@ -339,11 +340,17 @@ void _injectMenu() {
         databaseHelper: serviceLocator(),
       ),
     )
+    ..registerFactory<MenuRemoteDataSource>(
+      () => MenuRemoteDataSourceImpl(
+        webService: serviceLocator(),
+      ),
+    )
 
 // Repositories
     ..registerFactory<MenuRepository>(
       () => MenuRepositoryImpl(
         menuLocalDataSource: serviceLocator(),
+        menuRemoteDataSource: serviceLocator(),
       ),
     )
 // Use cases
@@ -357,11 +364,17 @@ void _injectMenu() {
         menuRepository: serviceLocator(),
       ),
     )
+    ..registerFactory(
+      () => AddToCart(
+        menuRepository: serviceLocator(),
+      ),
+    )
 // Blocs
     ..registerLazySingleton(
       () => MenuBloc(
         fetchCategories: serviceLocator(),
         fetchProducts: serviceLocator(),
+        addToCart: serviceLocator(),
       ),
     );
 }
