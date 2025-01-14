@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ordering_app/features/cart/presentation/blocs/cart/cart_bloc.dart';
+import 'package:ordering_app/features/checkout/presentation/blocs/cart/cart_bloc.dart';
 import 'package:ordering_app/features/theme/presentation/widgets/theme_mode_fab.dart';
 import 'package:ordering_app/config/theme/custom_colors.dart';
 import '../../../../config/routes/route_constants.dart';
@@ -59,18 +59,18 @@ class _ShellPageState extends State<ShellPage> {
             NavigationDestination(
               icon: Badge(
                 largeSize: 18,
-                isLabelVisible: state is CartFetchSuccess && state.cartItems.isNotEmpty,
+                isLabelVisible: state is CartFetchSuccess && state.cartSummary.products.isNotEmpty,
                 label: Text(
-                  state is CartFetchSuccess ? state.cartItems.length.toString() : '0',
+                  state is CartFetchSuccess ? state.cartSummary.products.length.toString() : '0',
                   style: TextStyle(color: appColors.primary),
                 ),
                 child: const Icon(Icons.shopping_cart_outlined),
               ),
               selectedIcon: Badge(
                 largeSize: 18,
-                isLabelVisible: state is CartFetchSuccess && state.cartItems.isNotEmpty,
+                isLabelVisible: state is CartFetchSuccess && state.cartSummary.products.isNotEmpty,
                 label: Text(
-                  state is CartFetchSuccess ? state.cartItems.length.toString() : '0',
+                  state is CartFetchSuccess ? state.cartSummary.products.length.toString() : '0',
                   style: TextStyle(color: appColors.primary),
                 ),
                 child: const Icon(Icons.shopping_cart),

@@ -9,7 +9,8 @@ import 'package:ordering_app/core/database/migrations.dart';
 import 'package:ordering_app/features/about/presentation/blocs/info/info_bloc.dart';
 import 'package:ordering_app/features/address_book/presentation/blocs/address_book/address_book_bloc.dart';
 import 'package:ordering_app/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:ordering_app/features/cart/presentation/blocs/cart/cart_bloc.dart';
+import 'package:ordering_app/features/checkout/presentation/blocs/cart/cart_bloc.dart';
+import 'package:ordering_app/features/checkout/presentation/blocs/checkout/checkout_bloc.dart';
 import 'package:ordering_app/features/home/presentation/blocs/banner/banner_bloc.dart';
 import 'package:ordering_app/features/home/presentation/blocs/featured_products/featured_products_bloc.dart';
 import 'package:ordering_app/features/menu/presentation/blocs/menu/menu_bloc.dart';
@@ -69,6 +70,9 @@ class AppRoot extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => serviceLocator<CartBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => serviceLocator<CheckoutBloc>(),
         ),
       ],
       child: const MyApp(),

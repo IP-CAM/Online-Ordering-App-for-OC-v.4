@@ -24,6 +24,7 @@ Future<void> injectDependencies() async {
   _injectAbout();
   _injectMenu();
   _injectCart();
+  _injectCheckout();
 }
 
 void _injectCore() {
@@ -416,6 +417,68 @@ void _injectCart() {
         fetchCart: serviceLocator(),
         removeItem: serviceLocator(),
         updateCart: serviceLocator(),
+      ),
+    );
+}
+
+void _injectCheckout() {
+// Data sources
+  serviceLocator
+    ..registerFactory<CheckoutRemoteDataSource>(
+      () => CheckoutRemoteDataSourceImpl(
+        webService: serviceLocator(),
+      ),
+    )
+
+// Repositories
+    ..registerFactory<CheckoutRepository>(
+      () => CheckoutRepositoryImpl(
+        checkoutRemoteDataSource: serviceLocator(),
+      ),
+    )
+// Use cases
+
+    ..registerFactory(
+      () => ConfirmOrder(
+        checkoutRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => FetchPaymentMethods(
+        checkoutRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => FetchShippingMethods(
+        checkoutRepository: serviceLocator(),
+      ),
+    )
+
+    ..registerFactory(
+      () => SetPaymentMethod(
+        checkoutRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => SetShippingAddress(
+        checkoutRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => SetShippingMethod(
+        checkoutRepository: serviceLocator(),
+      ),
+    )
+
+// Blocs
+    ..registerLazySingleton(
+      () => CheckoutBloc(
+        confirmOrder: serviceLocator(),
+        fetchPaymentMethods: serviceLocator(),
+        fetchShippingMethods: serviceLocator(),
+        setPaymentMethod: serviceLocator(),
+        setShippingAddress: serviceLocator(),
+        setShippingMethod: serviceLocator(),
       ),
     );
 }
