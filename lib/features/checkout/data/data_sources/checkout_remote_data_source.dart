@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:ordering_app/core/constants/urls.dart';
 import 'package:ordering_app/core/errors/exceptions.dart';
 import 'package:ordering_app/core/utils/web_service.dart';
+import 'package:ordering_app/features/checkout/data/models/checkout_summary_model.dart';
 import 'package:ordering_app/features/checkout/data/models/payment_method_model.dart';
 import 'package:ordering_app/features/checkout/data/models/shipping_method_model.dart';
 
 abstract interface class CheckoutRemoteDataSource {
-  Future<String> confirm();
+  Future<String> confirm({required String comment,});
   Future<List<ShippingMethodModel>> shippingMethods();
   Future<List<PaymentMethodModel>> paymentMethods();
 
@@ -15,6 +16,7 @@ abstract interface class CheckoutRemoteDataSource {
   });
   Future<String> setShippingMethod({required String code});
   Future<String> setPaymentMethod({required String code});
+  Future<CheckoutSummaryModel> reviewOrder();
 }
 
 class CheckoutRemoteDataSourceImpl implements CheckoutRemoteDataSource {
@@ -24,9 +26,11 @@ class CheckoutRemoteDataSourceImpl implements CheckoutRemoteDataSource {
       : _webService = webService;
 
   @override
-  Future<String> confirm() async {
+  Future<String> confirm({required String comment,}) async {
     try {
-      final response = await _webService.get(endpoint: Urls.confirm);
+      final response = await _webService.post(endpoint: Urls.confirmOrder, body: {
+        'comment':comment,
+      });
 
       // Early return if there's an error
       if (response.error != null) {
@@ -35,7 +39,7 @@ class CheckoutRemoteDataSourceImpl implements CheckoutRemoteDataSource {
 
       // Explicit type casting and null check
       if (response.success && response.data is Map) {
-        return response.data['success'] as String;
+        return response.data['order_id'] is int ? response.data['order_id'].toString() : response.data['order_id']  as String;
       }
 
       throw 'Unknown error';
@@ -48,7 +52,7 @@ class CheckoutRemoteDataSourceImpl implements CheckoutRemoteDataSource {
   @override
   Future<List<PaymentMethodModel>> paymentMethods() async {
     try {
-      final response = await _webService.get(endpoint: Urls.paymentMethods);
+      final response = await _webService.get(endpoint: Urls.fetchPaymentMethods);
 
       // Early return if there's an error
       if (response.error != null) {
@@ -74,14 +78,13 @@ class CheckoutRemoteDataSourceImpl implements CheckoutRemoteDataSource {
     try {
       final response =
           await _webService.post(endpoint: Urls.setPaymentMethod, body: {
-        'payment_method': code,
+        'payment_code': code,
       });
 
       // Early return if there's an error
       if (response.error != null) {
         throw response.error!;
       }
-
       // Explicit type casting and null check
       if (response.success && response.data is Map) {
         return response.data['success'] as String;
@@ -124,13 +127,14 @@ class CheckoutRemoteDataSourceImpl implements CheckoutRemoteDataSource {
     try {
       final response =
           await _webService.post(endpoint: Urls.setShippingMethod, body: {
-        'shipping_method': code,
+        'shipping_code': code,
       });
 
       // Early return if there's an error
       if (response.error != null) {
         throw response.error!;
       }
+
 
       // Explicit type casting and null check
       if (response.success && response.data is Map) {
@@ -147,7 +151,31 @@ class CheckoutRemoteDataSourceImpl implements CheckoutRemoteDataSource {
   @override
   Future<List<ShippingMethodModel>> shippingMethods() async {
     try {
-      final response = await _webService.get(endpoint: Urls.shippingMethods);
+      final response = await _webService.get(endpoint: Urls.getShippingMethods);
+
+      // Early return if there's an error
+      if (response.error != null) {
+        throw response.error!;
+      }
+      // Explicit type casting and null check
+      if (response.success && response.data['shipping_methods'] is List) {
+        return (response.data['shipping_methods'] as List)
+            .map((item) => ShippingMethodModel.fromMap(item))
+            .toList();
+      }
+
+      throw 'Unknown error';
+    } catch (e, s) {
+      debugPrint(s.toString());
+      throw AppException(e.toString());
+    }
+  }
+  
+  @override
+  Future<CheckoutSummaryModel> reviewOrder() async{
+    
+    try {
+      final response = await _webService.get(endpoint: Urls.reviewOrder);
 
       // Early return if there's an error
       if (response.error != null) {
@@ -155,10 +183,8 @@ class CheckoutRemoteDataSourceImpl implements CheckoutRemoteDataSource {
       }
 
       // Explicit type casting and null check
-      if (response.success && response.data['shipping_methods'] is List) {
-        return (response.data['shipping_methods'] as List)
-            .map((item) => ShippingMethodModel.fromMap(item))
-            .toList();
+      if (response.success && response.data['order_review'] is Map) {
+        return CheckoutSummaryModel.fromMap(response.data['order_review']);
       }
 
       throw 'Unknown error';

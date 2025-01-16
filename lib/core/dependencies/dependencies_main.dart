@@ -453,7 +453,6 @@ void _injectCheckout() {
         checkoutRepository: serviceLocator(),
       ),
     )
-
     ..registerFactory(
       () => SetPaymentMethod(
         checkoutRepository: serviceLocator(),
@@ -469,6 +468,11 @@ void _injectCheckout() {
         checkoutRepository: serviceLocator(),
       ),
     )
+    ..registerFactory(
+      () => FetchCheckoutSummary(
+        checkoutRepository: serviceLocator(),
+      ),
+    )
 
 // Blocs
     ..registerLazySingleton(
@@ -479,6 +483,7 @@ void _injectCheckout() {
         setPaymentMethod: serviceLocator(),
         setShippingAddress: serviceLocator(),
         setShippingMethod: serviceLocator(),
+        fetchCheckoutSummary: serviceLocator(),
       ),
     );
 }

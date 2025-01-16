@@ -18,7 +18,11 @@ class AddressCard extends StatelessWidget {
     required this.isOnCheckout,
   });
 
-  void _handleSelect(BuildContext context) {}
+  void _handleSelect(BuildContext context, int addressId) {
+    NavigationService.pushReplacementWithQuery(context, RouteConstants.checkout, {
+      'addressId': addressId,
+    });
+  }
 
   void _handleDelete(BuildContext context) async {
     final confirmed = await showDialog<bool>(
@@ -135,7 +139,8 @@ class AddressCard extends StatelessWidget {
                           icon: Icons.check,
                           label: 'Select',
                           color: appColors.success,
-                          onTap: () => _handleSelect(context),
+                          onTap: () =>
+                              _handleSelect(context, address.addressId),
                         ),
                         Container(
                           height: 1,

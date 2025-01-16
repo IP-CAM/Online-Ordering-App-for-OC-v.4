@@ -2,6 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:ordering_app/core/errors/exceptions.dart';
 import 'package:ordering_app/core/errors/failures.dart';
 import 'package:ordering_app/features/checkout/data/data_sources/checkout_remote_data_source.dart';
+import 'package:ordering_app/features/checkout/data/models/checkout_summary_model.dart';
 import 'package:ordering_app/features/checkout/data/models/payment_method_model.dart';
 import 'package:ordering_app/features/checkout/data/models/shipping_method_model.dart';
 import 'package:ordering_app/features/checkout/domain/repositories/checkout_repository.dart';
@@ -13,9 +14,9 @@ class CheckoutRepositoryImpl implements CheckoutRepository {
       {required CheckoutRemoteDataSource checkoutRemoteDataSource})
       : _checkoutRemoteDataSource = checkoutRemoteDataSource;
   @override
-  Future<Either<Failure, String>> confirm() async {
+  Future<Either<Failure, String>> confirm({required String comment}) async {
     try {
-      final res = await _checkoutRemoteDataSource.confirm();
+      final res = await _checkoutRemoteDataSource.confirm(comment: comment,);
 
       return right(res);
     } on AppException catch (e) {
@@ -82,4 +83,14 @@ class CheckoutRepositoryImpl implements CheckoutRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, CheckoutSummaryModel>> reviewOrder() async {
+    try {
+      final res = await _checkoutRemoteDataSource.reviewOrder();
+
+      return right(res);
+    } on AppException catch (e) {
+      return left(AppFailure(e.message));
+    }
+  }
 }

@@ -12,11 +12,11 @@ import 'package:ordering_app/features/address_book/presentation/widgets/address_
 import 'package:ordering_app/features/theme/presentation/widgets/theme_mode_fab.dart';
 
 class AddressBookPage extends StatefulWidget {
-  final bool isOnCheckout;
+  final bool? isOnCheckout;
 
   const AddressBookPage({
     super.key,
-    this.isOnCheckout = false,
+    this.isOnCheckout,
   });
 
   @override
@@ -51,7 +51,7 @@ class _AddressBookPageState extends State<AddressBookPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.isOnCheckout ? 'Select delivery address' : 'Address book',
+          widget.isOnCheckout == true ? 'Select delivery address' : 'Address book',
           style: theme.textTheme.titleLarge,
         ),
         actions: [
@@ -133,7 +133,7 @@ class _AddressBookPageState extends State<AddressBookPage> {
               separatorBuilder: (_, __) => const SizedBox(height: 8),
               itemBuilder: (context, index) => AddressCard(
                 address: _addresses[index],
-                isOnCheckout: widget.isOnCheckout,
+                isOnCheckout: widget.isOnCheckout ?? false,
                 onDeleteTap: () => _loadAddresses(),
               ),
             ),

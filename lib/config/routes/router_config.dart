@@ -8,6 +8,7 @@ import 'package:ordering_app/features/address_book/presentation/pages/address_bo
 import 'package:ordering_app/features/address_book/presentation/pages/address_details_page.dart';
 import 'package:ordering_app/features/checkout/presentation/pages/cart_page.dart';
 import 'package:ordering_app/features/checkout/presentation/pages/checkout_page.dart';
+import 'package:ordering_app/features/checkout/presentation/pages/order_success_page.dart';
 import 'package:ordering_app/features/menu/presentation/pages/menu_page.dart';
 import 'package:ordering_app/features/menu/presentation/pages/product_list_page.dart';
 import 'package:ordering_app/features/menu/presentation/pages/product_view_page.dart';
@@ -80,7 +81,7 @@ class AppRouter {
           // Extract address from state.extra safely
           final Map<String, dynamic>? extras =
               state.extra as Map<String, dynamic>?;
-          final bool? isOnCheckout = extras?['address'] as bool?;
+          final bool? isOnCheckout = extras?['isOnCheckout'] as bool?;
 
           return CustomTransitionPage<void>(
             key: state.pageKey,
@@ -194,6 +195,33 @@ class AppRouter {
             key: state.pageKey,
             child: CheckoutPage(
               addressId: addressId,
+            ),
+            transitionsBuilder: (
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+              Widget child,
+            ) {
+              return FadeTransition(
+                opacity: CurveTween(curve: Curves.easeInOut).animate(animation),
+                child: child,
+              );
+            },
+          );
+        },
+      ),
+      GoRoute(
+        path: RouteConstants.orderSuccess,
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          // Extract address from state.extra safely
+          final Map<String, dynamic>? extras =
+              state.extra as Map<String, dynamic>?;
+          final String orderId = extras?['addressId'] as String;
+
+          return CustomTransitionPage<void>(
+            key: state.pageKey,
+            child: OrderSuccessPage(
+              orderId: orderId,
             ),
             transitionsBuilder: (
               BuildContext context,

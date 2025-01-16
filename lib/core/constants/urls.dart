@@ -43,14 +43,16 @@ class Urls {
   // Checkout
 
   static const String summary = 'checkout|summary';
-  static const String setShippingAddress = 'checkout|set_shipping_address';
-  static const String shippingMethods = 'checkout|shipping_methods';
-  static const String setShippingMethod = 'checkout|set_shipping_method';
-  static const String paymentMethods = 'checkout|payment_methods';
-  static const String setPaymentMethod = 'checkout|set_payment_method';
-  static const String confirm = 'checkout|confirm';
+  static const String setShippingAddress = 'checkout|setShippingAddress';
+  static const String getShippingMethods = 'checkout|getShippingMethods';
+  static const String setShippingMethod = 'checkout|setShippingMethod';
+  static const String fetchPaymentMethods = 'checkout|fetchPaymentMethods';
+  static const String setPaymentMethod = 'checkout|setPaymentMethod';
+  static const String confirmOrder = 'checkout|confirmOrder';
   static const String addVoucher = 'checkout|addVoucher';
   static const String removeVoucher = 'checkout|removeVoucher';
   static const String saveCoupon = 'checkout|saveCoupon';
+  static const String reviewOrder = 'checkout|reviewOrder';
+
 
 }

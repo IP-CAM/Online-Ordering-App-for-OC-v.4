@@ -9,7 +9,7 @@ class ShippingMethodModel extends ShippingMethodEntity {
   });
     Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'method': shippingMethod,
+      'shipping_method': shippingMethod,
       'code': code,
     };
   }

@@ -3,7 +3,11 @@ part of 'checkout_bloc.dart';
 @immutable
 sealed class CheckoutEvent {}
 
-final class ConfirmOrderEvent extends CheckoutEvent {}
+final class ConfirmOrderEvent extends CheckoutEvent {
+  final String comment;
+
+  ConfirmOrderEvent({required this.comment});
+}
 
 final class FetchPaymentMethodsEvent extends CheckoutEvent {}
 
@@ -27,3 +31,6 @@ final class SetShippingMethodEvent extends CheckoutEvent {
 
   SetShippingMethodEvent({required this.code});
 }
+
+final class FetchSummaryEvent extends CheckoutEvent {}
+

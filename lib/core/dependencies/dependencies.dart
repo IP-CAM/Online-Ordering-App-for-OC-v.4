@@ -33,6 +33,7 @@ import 'package:ordering_app/features/checkout/data/data_sources/cart_remote_dat
 import 'package:ordering_app/features/checkout/data/repositories/cart_repository_impl.dart';
 import 'package:ordering_app/features/checkout/domain/repositories/cart_repository.dart';
 import 'package:ordering_app/features/checkout/domain/use_cases/fetch_cart.dart';
+import 'package:ordering_app/features/checkout/domain/use_cases/fetch_checkout_summary.dart';
 import 'package:ordering_app/features/checkout/domain/use_cases/remove_item.dart';
 import 'package:ordering_app/features/checkout/domain/use_cases/update_cart.dart';
 import 'package:ordering_app/features/checkout/presentation/blocs/cart/cart_bloc.dart';

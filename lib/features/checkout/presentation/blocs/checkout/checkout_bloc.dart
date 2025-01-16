@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ordering_app/core/use_case/use_case.dart';
+import 'package:ordering_app/features/checkout/domain/entities/checkout_summary_entity.dart';
 import 'package:ordering_app/features/checkout/domain/entities/payment_method_entity.dart';
 import 'package:ordering_app/features/checkout/domain/entities/shipping_method_entity.dart';
 import 'package:ordering_app/features/checkout/domain/use_cases/confirm_order.dart';
+import 'package:ordering_app/features/checkout/domain/use_cases/fetch_checkout_summary.dart';
 import 'package:ordering_app/features/checkout/domain/use_cases/fetch_payment_methods.dart';
 import 'package:ordering_app/features/checkout/domain/use_cases/fetch_shipping_methods.dart';
 import 'package:ordering_app/features/checkout/domain/use_cases/set_payment_method.dart';
@@ -20,6 +22,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
   final SetPaymentMethod _setPaymentMethod;
   final SetShippingAddress _setShippingAddress;
   final SetShippingMethod _setShippingMethod;
+  final FetchCheckoutSummary _fetchCheckoutSummary;
 
   CheckoutBloc({
     required ConfirmOrder confirmOrder,
@@ -28,12 +31,14 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     required SetPaymentMethod setPaymentMethod,
     required SetShippingAddress setShippingAddress,
     required SetShippingMethod setShippingMethod,
+    required FetchCheckoutSummary fetchCheckoutSummary,
   })  : _confirmOrder = confirmOrder,
         _fetchPaymentMethods = fetchPaymentMethods,
         _fetchShippingMethods = fetchShippingMethods,
         _setPaymentMethod = setPaymentMethod,
         _setShippingAddress = setShippingAddress,
         _setShippingMethod = setShippingMethod,
+        _fetchCheckoutSummary = fetchCheckoutSummary,
         super(CheckoutInitial()) {
     on<ConfirmOrderEvent>(_onConfirmOrderEvent);
     on<FetchPaymentMethodsEvent>(_onFetchPaymentMethodsEvent);
@@ -41,17 +46,18 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
     on<SetPaymentMethodEvent>(_onSetPaymentMethodEvent);
     on<SetShippingAddressEvent>(_onSetShippingAddressEvent);
     on<SetShippingMethodEvent>(_onSetShippingMethodEvent);
+    on<FetchSummaryEvent>(_onFetchSummaryEvent);
   }
 
   void _onConfirmOrderEvent(
     ConfirmOrderEvent event,
     Emitter<CheckoutState> emit,
   ) async {
-    final res = await _confirmOrder(NoParams());
+    final res = await _confirmOrder(ConfirmOrderParams(comment: event.comment));
 
     res.fold(
       (l) => emit(CheckoutFailure(error: l.message)),
-      (r) => emit(ConfirmOrderSuccess(message: r)),
+      (r) => emit(ConfirmOrderSuccess(orderId: r)),
     );
   }
 
@@ -89,7 +95,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
 
     res.fold(
       (l) => emit(CheckoutFailure(error: l.message)),
-      (r) => emit(CheckoutStepSuccess(message: r)),
+      (r) => emit(SetPaymentMethodSuccess(message: r)),
     );
   }
 
@@ -102,7 +108,7 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
 
     res.fold(
       (l) => emit(CheckoutFailure(error: l.message)),
-      (r) => emit(CheckoutStepSuccess(message: r)),
+      (r) => emit(SetShippingAddressSuccess(message: r)),
     );
   }
 
@@ -115,7 +121,13 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
 
     res.fold(
       (l) => emit(CheckoutFailure(error: l.message)),
-      (r) => emit(CheckoutStepSuccess(message: r)),
+      (r) => emit(SetShippingMethodSuccess(message: r)),
     );
+  }
+
+  void _onFetchSummaryEvent(FetchSummaryEvent event, Emitter<CheckoutState> emit)async{
+    final res = await _fetchCheckoutSummary(NoParams());
+
+    res.fold((l) => emit(CheckoutFailure(error: l.message)), (r) => emit(FetchSummarySuccess(summary: r)),);
   }
 }

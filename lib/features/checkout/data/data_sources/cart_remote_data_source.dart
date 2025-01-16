@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ordering_app/core/constants/urls.dart';
 import 'package:ordering_app/core/errors/exceptions.dart';
 import 'package:ordering_app/core/utils/web_service.dart';
-import 'package:ordering_app/features/checkout/data/models/checkout_summary_model.dart';
+import 'package:ordering_app/features/checkout/data/models/cart_summary_model.dart';
 
 abstract interface class CartRemoteDataSource {
   Future<CartSummaryModel> getCart();

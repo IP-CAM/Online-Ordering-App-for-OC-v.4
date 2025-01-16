@@ -2,7 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:ordering_app/core/errors/exceptions.dart';
 import 'package:ordering_app/core/errors/failures.dart';
 import 'package:ordering_app/features/checkout/data/data_sources/cart_remote_data_source.dart';
-import 'package:ordering_app/features/checkout/data/models/checkout_summary_model.dart';
+import 'package:ordering_app/features/checkout/data/models/cart_summary_model.dart';
 
 import 'package:ordering_app/features/checkout/domain/repositories/cart_repository.dart';
 

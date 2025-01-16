@@ -1,45 +1,75 @@
 import 'dart:convert';
 
 import 'package:ordering_app/features/address_book/data/models/address_model.dart';
-import 'package:ordering_app/features/checkout/data/models/cart_item_model.dart';
+import 'package:ordering_app/features/checkout/data/models/payment_method_model.dart';
 import 'package:ordering_app/features/checkout/data/models/shipping_method_model.dart';
-import 'package:ordering_app/features/checkout/data/models/total_model.dart';
-import 'package:ordering_app/features/checkout/domain/entities/cart_summary_entity.dart';
+import 'package:ordering_app/features/checkout/domain/entities/checkout_summary_entity.dart';
 
-class CartSummaryModel extends CartSummaryEntity {
-  CartSummaryModel({
-    required super.products,
+class CheckoutSummaryModel extends CheckoutSummaryEntity {
+  CheckoutSummaryModel({
+    required super.checkoutTotals,
     required super.shippingAddress,
     required super.shippingMethod,
-    required super.totals,
+    required super.paymentMethod,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'products': products.map((x) => (x as CartItemModel).toMap()).toList(),
+      'checkoutTotals': (checkoutTotals as CheckoutTotalsModel).toMap(),
       'shippingAddress': (shippingAddress as AddressModel).toMap(),
       'shippingMethod': (shippingMethod as ShippingMethodModel).toMap(),
-      'totals': totals.map((x) => (x as TotalModel).toMap()).toList(),
+      'paymentMethod': (paymentMethod as PaymentMethodModel).toMap(),
     };
   }
 
-  factory CartSummaryModel.fromMap(Map<String, dynamic> map) {
-    return CartSummaryModel(
-      products: 
-        (map['products'] as List<dynamic>).map(
-          (x) => CartItemModel.fromMap(x as Map<String, dynamic>),
-        ).toList(),
-      
-      shippingAddress: map['shipping_address'] != null
-          ? AddressModel.fromMap(map['shippingAddress'] as Map<String, dynamic>)
-          : null,
-      shippingMethod: map['shipping_method'] != null
-          ? ShippingMethodModel.fromMap(
-              map['shippingMethod'] as Map<String, dynamic>)
-          : null,
-      totals: List<TotalModel>.from(
-        (map['totals'] as List<dynamic>).map<TotalModel>(
-          (x) => TotalModel.fromMap(x as Map<String, dynamic>),
+  factory CheckoutSummaryModel.fromMap(Map<String, dynamic> map) {
+    return CheckoutSummaryModel(
+      checkoutTotals:
+          CheckoutTotalsModel.fromMap(map['totals'] as Map<String, dynamic>),
+      shippingAddress:
+          AddressModel.fromMap(map['shipping_address'] as Map<String, dynamic>),
+      shippingMethod: ShippingMethodModel.fromMap(
+          map['shipping_method'] as Map<String, dynamic>),
+      paymentMethod: PaymentMethodModel.fromMap(
+          map['payment_method'] as Map<String, dynamic>),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory CheckoutSummaryModel.fromJson(String source) =>
+      CheckoutSummaryModel.fromMap(json.decode(source) as Map<String, dynamic>);
+}
+
+class CheckoutTotalsModel extends CheckoutTotals {
+  CheckoutTotalsModel({
+    required super.subTotal,
+    required super.total,
+    required super.appliedTotals,
+    required super.taxes,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'subtotal': subTotal,
+      'total': total,
+      'applied_totals': appliedTotals,
+      'taxes': taxes.map((x) => (x as TaxModel).toMap()).toList(),
+    };
+  }
+
+  factory CheckoutTotalsModel.fromMap(Map<String, dynamic> map) {
+    return CheckoutTotalsModel(
+      subTotal: map['subtotal'] as String,
+      total: map['total'] as String,
+      appliedTotals: List<Map<String, dynamic>>.from(
+        (map['applied_totals'] as List<dynamic>).map<Map<String, dynamic>>(
+          (x) => x,
+        ),
+      ),
+      taxes: List<TaxModel>.from(
+        (map['taxes'] as List<dynamic>).map<TaxModel>(
+          (x) => TaxModel.fromMap(x as Map<String, dynamic>),
         ),
       ),
     );
@@ -47,6 +77,42 @@ class CartSummaryModel extends CartSummaryEntity {
 
   String toJson() => json.encode(toMap());
 
-  factory CartSummaryModel.fromJson(String source) =>
-      CartSummaryModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory CheckoutTotalsModel.fromJson(String source) =>
+      CheckoutTotalsModel.fromMap(json.decode(source) as Map<String, dynamic>);
+}
+
+class TaxModel extends TaxEntity {
+  TaxModel({
+    required super.code,
+    required super.title,
+    required super.value,
+    required super.sortOrder,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'code': code,
+      'title': title,
+      'value': value,
+      'sort_order': sortOrder,
+    };
+  }
+
+  factory TaxModel.fromMap(Map<String, dynamic> map) {
+    return TaxModel(
+      code: map['code'] as String,
+      title: map['title'] as String,
+      value: map['value'] is double
+          ? map['value'] as double
+          : map['value'] is int
+              ? (map['value'] as int).toDouble()
+              : double.tryParse(map['value'].toString()) ?? 0.0,
+      sortOrder: map['sort_order'] as int,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory TaxModel.fromJson(String source) =>
+      TaxModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

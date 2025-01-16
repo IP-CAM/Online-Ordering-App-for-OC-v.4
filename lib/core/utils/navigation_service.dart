@@ -34,7 +34,7 @@ class NavigationService {
   static void pushReplacementWithQuery(
     BuildContext context,
     String location,
-    Map<String, String> queryParams,
+    Map<String, dynamic> queryParams,
   ) {
     context.pushReplacement(location, extra: queryParams);
   }

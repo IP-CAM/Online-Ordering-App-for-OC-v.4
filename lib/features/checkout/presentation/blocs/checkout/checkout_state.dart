@@ -13,16 +13,28 @@ final class CheckoutFailure extends CheckoutState {
   CheckoutFailure({required this.error});
 }
 
-final class CheckoutStepSuccess extends CheckoutState {
+final class SetShippingAddressSuccess extends CheckoutState {
   final String message;
 
-  CheckoutStepSuccess({required this.message});
+  SetShippingAddressSuccess({required this.message});
+}
+
+final class SetShippingMethodSuccess extends CheckoutState {
+  final String message;
+
+  SetShippingMethodSuccess({required this.message});
+}
+
+final class SetPaymentMethodSuccess extends CheckoutState {
+  final String message;
+
+  SetPaymentMethodSuccess({required this.message});
 }
 
 final class ConfirmOrderSuccess extends CheckoutState {
-  final String message;
+  final String orderId;
 
-  ConfirmOrderSuccess({required this.message});
+  ConfirmOrderSuccess({required this.orderId});
 }
 
 final class FetchPaymentMethodsSuccess extends CheckoutState {
@@ -35,4 +47,10 @@ final class FetchShippingMethodsSuccess extends CheckoutState {
   final List<ShippingMethodEntity> shippingMethods;
 
   FetchShippingMethodsSuccess({required this.shippingMethods});
+}
+
+final class FetchSummarySuccess extends CheckoutState {
+  final CheckoutSummaryEntity summary;
+
+  FetchSummarySuccess({required this.summary});
 }
