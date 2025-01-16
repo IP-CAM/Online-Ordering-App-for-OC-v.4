@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ordering_app/core/utils/helpers.dart';
+import 'package:ordering_app/core/utils/navigation_service.dart';
 import 'package:ordering_app/features/checkout/domain/entities/cart_item_entity.dart';
 import 'package:ordering_app/features/checkout/presentation/blocs/cart/cart_bloc.dart';
 
@@ -37,7 +37,7 @@ class CartItemCard extends StatelessWidget {
               'Are you sure you want to remove this item from your cart?'),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => NavigationService.pop(context),
               child: Text(
                 'Cancel',
                 style: TextStyle(color: theme.colorScheme.primary),
@@ -45,7 +45,7 @@ class CartItemCard extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                NavigationService.pop(context);
                 context.read<CartBloc>().add(
                       CartItemRemoveEvent(cartId: item.cartId),
                     );
