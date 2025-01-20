@@ -16,7 +16,9 @@ class CheckoutRepositoryImpl implements CheckoutRepository {
   @override
   Future<Either<Failure, String>> confirm({required String comment}) async {
     try {
-      final res = await _checkoutRemoteDataSource.confirm(comment: comment,);
+      final res = await _checkoutRemoteDataSource.confirm(
+        comment: comment,
+      );
 
       return right(res);
     } on AppException catch (e) {
@@ -87,6 +89,72 @@ class CheckoutRepositoryImpl implements CheckoutRepository {
   Future<Either<Failure, CheckoutSummaryModel>> reviewOrder() async {
     try {
       final res = await _checkoutRemoteDataSource.reviewOrder();
+
+      return right(res);
+    } on AppException catch (e) {
+      return left(AppFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> applyCoupon({required String code}) async {
+    try {
+      final res = await _checkoutRemoteDataSource.applyCoupon(code: code);
+
+      return right(res);
+    } on AppException catch (e) {
+      return left(AppFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> applyReward({required String points}) async {
+    try {
+      final res = await _checkoutRemoteDataSource.applyReward(points: points);
+
+      return right(res);
+    } on AppException catch (e) {
+      return left(AppFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> applyVoucher({required String code}) async {
+    try {
+      final res = await _checkoutRemoteDataSource.applyVoucher(code: code);
+
+      return right(res);
+    } on AppException catch (e) {
+      return left(AppFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> removeCoupon() async {
+    try {
+      final res = await _checkoutRemoteDataSource.removeCoupon();
+
+      return right(res);
+    } on AppException catch (e) {
+      return left(AppFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> removeReward() async {
+    try {
+      final res = await _checkoutRemoteDataSource.removeReward();
+
+      return right(res);
+    } on AppException catch (e) {
+      return left(AppFailure(e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> removeVoucher() async {
+    try {
+      final res = await _checkoutRemoteDataSource.removeVoucher();
 
       return right(res);
     } on AppException catch (e) {

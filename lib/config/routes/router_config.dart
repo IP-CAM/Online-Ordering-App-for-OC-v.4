@@ -216,7 +216,7 @@ class AppRouter {
           // Extract address from state.extra safely
           final Map<String, dynamic>? extras =
               state.extra as Map<String, dynamic>?;
-          final String orderId = extras?['addressId'] as String;
+          final String orderId = extras?['orderId'] as String;
 
           return CustomTransitionPage<void>(
             key: state.pageKey,

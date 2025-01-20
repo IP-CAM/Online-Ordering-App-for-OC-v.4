@@ -1,6 +1,8 @@
 class Urls {
   static const String baseUrl = 'http://127.0.0.1/opencart/mobileapi/';
 
+  static const String connectionTest = 'test|connection';
+
   // Auth
   static const String login = "auth|login";
   static const String logout = "auth|logout";
@@ -49,9 +51,12 @@ class Urls {
   static const String fetchPaymentMethods = 'checkout|fetchPaymentMethods';
   static const String setPaymentMethod = 'checkout|setPaymentMethod';
   static const String confirmOrder = 'checkout|confirmOrder';
-  static const String addVoucher = 'checkout|addVoucher';
+  static const String applyVoucher = 'checkout|applyVoucher';
   static const String removeVoucher = 'checkout|removeVoucher';
-  static const String saveCoupon = 'checkout|saveCoupon';
+  static const String applyCoupon = 'checkout|applyCoupon';
+  static const String removeCoupon = 'checkout|removeCoupon';
+  static const String applyReward = 'checkout|applyReward';
+  static const String removeReward = 'checkout|removeReward';
   static const String reviewOrder = 'checkout|reviewOrder';
 
 

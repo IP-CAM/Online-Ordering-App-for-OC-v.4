@@ -14,14 +14,12 @@ class CheckoutSummaryEntity {
     required this.shippingMethod,
     required this.paymentMethod,
   });
-
- 
 }
 
 class CheckoutTotals {
   final String subTotal;
   final String total;
-  final List<Map<String, dynamic>> appliedTotals;
+  final List<AppliedTotalEntity> appliedTotals;
   final List<TaxEntity> taxes;
 
   CheckoutTotals({
@@ -31,9 +29,8 @@ class CheckoutTotals {
     required this.taxes,
   });
 
- 
-}
 
+}
 
 class TaxEntity {
   final String code;
@@ -47,5 +44,14 @@ class TaxEntity {
     required this.value,
     required this.sortOrder,
   });
+}
 
+class AppliedTotalEntity {
+  final String title;
+  final String value;
+
+  AppliedTotalEntity({
+    required this.title,
+    required this.value,
+  });
 }

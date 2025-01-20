@@ -473,7 +473,36 @@ void _injectCheckout() {
         checkoutRepository: serviceLocator(),
       ),
     )
-
+    ..registerFactory(
+      () => ApplyCoupon(
+        checkoutRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => ApplyReward(
+        checkoutRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => ApplyVoucher(
+        checkoutRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => RemoveCoupon(
+        checkoutRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => RemoveReward(
+        checkoutRepository: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => RemoveVoucher(
+        checkoutRepository: serviceLocator(),
+      ),
+    )
 // Blocs
     ..registerLazySingleton(
       () => CheckoutBloc(
@@ -484,6 +513,12 @@ void _injectCheckout() {
         setShippingAddress: serviceLocator(),
         setShippingMethod: serviceLocator(),
         fetchCheckoutSummary: serviceLocator(),
+        applyCoupon: serviceLocator(),
+        applyReward: serviceLocator(),
+        applyVoucher: serviceLocator(),
+        removeCoupon: serviceLocator(),
+        removeReward: serviceLocator(),
+        removeVoucher: serviceLocator(),
       ),
     );
 }

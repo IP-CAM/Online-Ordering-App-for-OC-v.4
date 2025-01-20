@@ -54,3 +54,27 @@ final class FetchSummarySuccess extends CheckoutState {
 
   FetchSummarySuccess({required this.summary});
 }
+
+final class RewardSuccess extends CheckoutState {
+  final String message;
+
+  RewardSuccess({required this.message});
+}
+
+final class VoucherSuccess extends CheckoutState {
+  final String message;
+
+  VoucherSuccess({required this.message});
+}
+
+final class CouponSuccess extends CheckoutState {
+  final String message;
+
+  CouponSuccess({required this.message});
+}
+
+final class RemoveTotalsSuccess extends CheckoutState {
+  final String message;
+
+  RemoveTotalsSuccess({required this.message});
+}

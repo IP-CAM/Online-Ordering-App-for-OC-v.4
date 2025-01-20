@@ -34,3 +34,24 @@ final class SetShippingMethodEvent extends CheckoutEvent {
 
 final class FetchSummaryEvent extends CheckoutEvent {}
 
+final class ApplyCouponEvent extends CheckoutEvent {
+  final String code;
+
+  ApplyCouponEvent({required this.code});
+}
+
+final class ApplyRewardEvent extends CheckoutEvent {
+  final String points;
+
+  ApplyRewardEvent({required this.points});
+}
+
+final class ApplyVoucherEvent extends CheckoutEvent {
+  final String code;
+
+  ApplyVoucherEvent({required this.code});
+}
+
+final class RemoveCouponEvent extends CheckoutEvent {}
+final class RemoveRewardEvent extends CheckoutEvent {}
+final class RemoveVoucherEvent extends CheckoutEvent {}

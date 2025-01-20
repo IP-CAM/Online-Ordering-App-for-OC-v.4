@@ -101,17 +101,16 @@ class _CheckoutPageState extends State<CheckoutPage> {
     }
 
     setState(() => _appliedCoupon = _couponController.text);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Coupon applied successfully')),
-    );
+    BlocProvider.of<CheckoutBloc>(context).add(ApplyCouponEvent(
+      code: _couponController.text,
+    ));
   }
 
   void _removeCoupon() {
     setState(() => _appliedCoupon = null);
     _couponController.clear();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Coupon removed successfully')),
-    );
+
+    BlocProvider.of<CheckoutBloc>(context).add(RemoveCouponEvent());
   }
 
   void _applyVoucher() {
@@ -123,17 +122,15 @@ class _CheckoutPageState extends State<CheckoutPage> {
     }
 
     setState(() => _appliedVoucher = _voucherController.text);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Voucher applied successfully')),
-    );
+    BlocProvider.of<CheckoutBloc>(context).add(ApplyVoucherEvent(code: _voucherController.text));
+   
   }
 
   void _removeVoucher() {
     setState(() => _appliedVoucher = null);
     _voucherController.clear();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Voucher removed successfully')),
-    );
+    BlocProvider.of<CheckoutBloc>(context).add(RemoveVoucherEvent());
+    
   }
 
   @override
@@ -206,9 +203,40 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   context,
                   RouteConstants.orderSuccess,
                   {
-                    'addressId': state.orderId,
+                    'orderId': state.orderId,
                   },
                 );
+              }
+
+              if (state is CouponSuccess) {
+                showCustomSnackBar(
+                    context: context,
+                    message: state.message,
+                    type: SnackBarType.success);
+                _loadSummary();
+              }
+
+              if (state is RemoveTotalsSuccess) {
+                showCustomSnackBar(
+                    context: context,
+                    message: state.message,
+                    type: SnackBarType.success);
+                _loadSummary();
+              }
+              if (state is RewardSuccess) {
+                showCustomSnackBar(
+                    context: context,
+                    message: state.message,
+                    type: SnackBarType.success);
+                _loadSummary();
+              }
+
+              if (state is VoucherSuccess) {
+                showCustomSnackBar(
+                    context: context,
+                    message: state.message,
+                    type: SnackBarType.success);
+                _loadSummary();
               }
             },
           )
@@ -697,10 +725,9 @@ class _CheckoutPageState extends State<CheckoutPage> {
                           isTotal: false,
                         ),
                         ..._checkoutSummary!.checkoutTotals.appliedTotals
-                            .expand((total) => total.entries)
-                            .map((entry) => _buildPriceLine(
-                                  entry.key,
-                                  entry.value,
+                            .map((total) => _buildPriceLine(
+                                  total.title,
+                                  total.value,
                                   isTotal: false,
                                 )),
                         const Divider(),

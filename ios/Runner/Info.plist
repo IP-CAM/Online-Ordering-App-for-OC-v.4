@@ -50,5 +50,7 @@
     	<string>tel</string>
     	<string>mailto</string>
 	</array>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Looking for local network devices...</string>
 </dict>
 </plist>

@@ -48,12 +48,11 @@ class CheckoutTotalsModel extends CheckoutTotals {
     required super.appliedTotals,
     required super.taxes,
   });
-
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'subtotal': subTotal,
+      'subTotal': subTotal,
       'total': total,
-      'applied_totals': appliedTotals,
+      'appliedTotals': appliedTotals.map((x) => (x as AppliedTotalModel).toMap()).toList(),
       'taxes': taxes.map((x) => (x as TaxModel).toMap()).toList(),
     };
   }
@@ -62,23 +61,15 @@ class CheckoutTotalsModel extends CheckoutTotals {
     return CheckoutTotalsModel(
       subTotal: map['subtotal'] as String,
       total: map['total'] as String,
-      appliedTotals: List<Map<String, dynamic>>.from(
-        (map['applied_totals'] as List<dynamic>).map<Map<String, dynamic>>(
-          (x) => x,
-        ),
-      ),
-      taxes: List<TaxModel>.from(
-        (map['taxes'] as List<dynamic>).map<TaxModel>(
-          (x) => TaxModel.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
+      appliedTotals: List<AppliedTotalModel>.from((map['applied_totals'] as List<dynamic>).map<AppliedTotalModel>((x) => AppliedTotalModel.fromMap(x as Map<String,dynamic>),),),
+      taxes: List<TaxModel>.from((map['taxes'] as List<dynamic>).map<TaxEntity>((x) => TaxModel.fromMap(x as Map<String,dynamic>),),),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory CheckoutTotalsModel.fromJson(String source) =>
-      CheckoutTotalsModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory CheckoutTotalsModel.fromJson(String source) => CheckoutTotalsModel.fromMap(json.decode(source) as Map<String, dynamic>);
+
 }
 
 class TaxModel extends TaxEntity {
@@ -115,4 +106,26 @@ class TaxModel extends TaxEntity {
 
   factory TaxModel.fromJson(String source) =>
       TaxModel.fromMap(json.decode(source) as Map<String, dynamic>);
+}
+
+class AppliedTotalModel extends AppliedTotalEntity{
+  AppliedTotalModel({required super.title, required super.value,});
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'title': title,
+      'value': value,
+    };
+  }
+
+  factory AppliedTotalModel.fromMap(Map<String, dynamic> map) {
+    return AppliedTotalModel(
+      title: map['title'] as String,
+      value: map['value'] as String,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory AppliedTotalModel.fromJson(String source) => AppliedTotalModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }
