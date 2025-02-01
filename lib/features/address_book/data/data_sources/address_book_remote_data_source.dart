@@ -46,6 +46,9 @@ class AddressBookRemoteDataSourceImpl implements AddressBookRemoteDataSource {
         throw response.error!;
       }
 
+      if (response.data is List && (response.data as List).isEmpty) {
+        return [];
+      }
       // Explicit type casting and null check
       if (response.success && response.data['addresses'] is List) {
         return (response.data['addresses'] as List)

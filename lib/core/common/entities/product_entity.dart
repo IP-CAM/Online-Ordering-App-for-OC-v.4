@@ -19,7 +19,6 @@ class ProductEntity {
   final String stockStatus;
   final String image;
   final List<String> additionalImages;
-  final List<int> categories;
   final double price;
   final double? special;
   final int taxClassId;
@@ -57,7 +56,6 @@ class ProductEntity {
     required this.stockStatus,
     required this.image,
     required this.additionalImages,
-    required this.categories,
     required this.price,
     required this.special,
     required this.taxClassId,

@@ -7,6 +7,7 @@ import 'package:ordering_app/core/dependencies/dependencies.dart';
 import 'package:ordering_app/core/utils/helpers.dart';
 import 'package:ordering_app/core/utils/navigation_service.dart';
 import 'package:ordering_app/core/utils/show_snackbar.dart';
+import 'package:ordering_app/features/checkout/presentation/blocs/cart/cart_bloc.dart';
 import 'package:ordering_app/features/menu/presentation/blocs/menu/menu_bloc.dart';
 import 'package:ordering_app/features/menu/presentation/widgets/product_price.dart';
 
@@ -57,6 +58,7 @@ class ProductDetails extends StatelessWidget {
                       message: decodeHtmlEntities(state.message),
                       type: SnackBarType.success,
                     );
+                    BlocProvider.of<CartBloc>(context).add(CartFetchEvent());
                   }
                 },
                 builder: (context, state) {

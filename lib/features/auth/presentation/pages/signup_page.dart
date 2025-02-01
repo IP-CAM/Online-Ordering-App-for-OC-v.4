@@ -263,10 +263,6 @@ class _SignUpPageState extends State<SignUpPage> {
                           message: "Registration was successful",
                           type: SnackBarType.success,
                         );
-                        NavigationService.pushReplacement(
-                          context,
-                          _nextPage,
-                        );
                       }
                       if(state is AuthInitialSuccess){
                         NavigationService.pushReplacement(

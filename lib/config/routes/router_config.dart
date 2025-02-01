@@ -48,7 +48,7 @@ class AppRouter {
       GoRoute(
         path: RouteConstants.splash,
         pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
+          key: ValueKey('splash-${state.uri.toString()}'),
           child: const SplashPage(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(opacity: animation, child: child);
@@ -58,7 +58,7 @@ class AppRouter {
       GoRoute(
         path: RouteConstants.login,
         pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
+          key: ValueKey('login-${state.uri.toString()}'),
           child: const LoginPage(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(opacity: animation, child: child);
@@ -68,7 +68,7 @@ class AppRouter {
       GoRoute(
         path: RouteConstants.register,
         pageBuilder: (context, state) => CustomTransitionPage(
-          key: state.pageKey,
+          key: ValueKey('register-${state.uri.toString()}'),
           child: const SignUpPage(),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(opacity: animation, child: child);
@@ -78,13 +78,11 @@ class AppRouter {
       GoRoute(
         path: RouteConstants.addressBook,
         pageBuilder: (BuildContext context, GoRouterState state) {
-          // Extract address from state.extra safely
-          final Map<String, dynamic>? extras =
-              state.extra as Map<String, dynamic>?;
+          final Map<String, dynamic>? extras = state.extra as Map<String, dynamic>?;
           final bool? isOnCheckout = extras?['isOnCheckout'] as bool?;
 
           return CustomTransitionPage<void>(
-            key: state.pageKey,
+            key: ValueKey('address-book-${state.uri.toString()}'),
             child: AddressBookPage(
               isOnCheckout: isOnCheckout ?? false,
             ),
@@ -105,13 +103,11 @@ class AppRouter {
       GoRoute(
         path: RouteConstants.addressDetailsPage,
         pageBuilder: (BuildContext context, GoRouterState state) {
-          // Extract address from state.extra safely
-          final Map<String, dynamic>? extras =
-              state.extra as Map<String, dynamic>?;
+          final Map<String, dynamic>? extras = state.extra as Map<String, dynamic>?;
           final AddressEntity? address = extras?['address'] as AddressEntity?;
 
           return CustomTransitionPage<void>(
-            key: state.pageKey,
+            key: ValueKey('address-details-${state.uri.toString()}'),
             child: AddressDetailsPage(
               address: address,
             ),
@@ -132,13 +128,23 @@ class AppRouter {
       GoRoute(
         path: RouteConstants.products,
         pageBuilder: (BuildContext context, GoRouterState state) {
-          // Extract address from state.extra safely
-          final Map<String, dynamic>? extras =
-              state.extra as Map<String, dynamic>?;
-          final List<int> products = extras?['products'] as List<int>;
+          final Map<String, dynamic>? extras = state.extra as Map<String, dynamic>?;
+          final List<int>? products = extras?['products'] as List<int>?;
+
+          if (extras == null || products == null) {
+            return CustomTransitionPage(
+              key: ValueKey('products-error-${state.uri.toString()}'),
+              child: const Scaffold(
+                body: Center(child: Text('Invalid product data')),
+              ),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+            );
+          }
 
           return CustomTransitionPage<void>(
-            key: state.pageKey,
+            key: ValueKey('products-${state.uri.toString()}'),
             child: ProductListPage(
               productIds: products,
             ),
@@ -159,13 +165,23 @@ class AppRouter {
       GoRoute(
         path: RouteConstants.productView,
         pageBuilder: (BuildContext context, GoRouterState state) {
-          // Extract address from state.extra safely
-          final Map<String, dynamic>? extras =
-              state.extra as Map<String, dynamic>?;
-          final ProductEntity product = extras?['product'] as ProductEntity;
+          final Map<String, dynamic>? extras = state.extra as Map<String, dynamic>?;
+          final ProductEntity? product = extras?['product'] as ProductEntity?;
+
+          if (extras == null || product == null) {
+            return CustomTransitionPage(
+              key: ValueKey('product-view-error-${state.uri.toString()}'),
+              child: const Scaffold(
+                body: Center(child: Text('Invalid product data')),
+              ),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+            );
+          }
 
           return CustomTransitionPage<void>(
-            key: state.pageKey,
+            key: ValueKey('product-view-${product.productId}-${state.uri.toString()}'),
             child: ProductViewPage(
               product: product,
             ),
@@ -186,13 +202,11 @@ class AppRouter {
       GoRoute(
         path: RouteConstants.checkout,
         pageBuilder: (BuildContext context, GoRouterState state) {
-          // Extract address from state.extra safely
-          final Map<String, dynamic>? extras =
-              state.extra as Map<String, dynamic>?;
+          final Map<String, dynamic>? extras = state.extra as Map<String, dynamic>?;
           final int? addressId = extras?['addressId'] as int?;
 
           return CustomTransitionPage<void>(
-            key: state.pageKey,
+            key: ValueKey('checkout-${addressId ?? 'default'}-${state.uri.toString()}'),
             child: CheckoutPage(
               addressId: addressId,
             ),
@@ -213,13 +227,23 @@ class AppRouter {
       GoRoute(
         path: RouteConstants.orderSuccess,
         pageBuilder: (BuildContext context, GoRouterState state) {
-          // Extract address from state.extra safely
-          final Map<String, dynamic>? extras =
-              state.extra as Map<String, dynamic>?;
-          final String orderId = extras?['orderId'] as String;
+          final Map<String, dynamic>? extras = state.extra as Map<String, dynamic>?;
+          final String? orderId = extras?['orderId'] as String?;
+
+          if (extras == null || orderId == null) {
+            return CustomTransitionPage(
+              key: ValueKey('order-success-error-${state.uri.toString()}'),
+              child: const Scaffold(
+                body: Center(child: Text('Invalid order data')),
+              ),
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+            );
+          }
 
           return CustomTransitionPage<void>(
-            key: state.pageKey,
+            key: ValueKey('order-success-${orderId}-${state.uri.toString()}'),
             child: OrderSuccessPage(
               orderId: orderId,
             ),
@@ -238,16 +262,18 @@ class AppRouter {
         },
       ),
       ShellRoute(
-        builder: (context, state, child) => ShellPage(child: child),
+        builder: (context, state, child) => ShellPage(
+          key: ValueKey('shell-${state.uri.toString()}'),
+          child: child
+        ),
         routes: [
           GoRoute(
             path: RouteConstants.home,
             pageBuilder: (context, state) => CustomTransitionPage(
-              key: state.pageKey,
+              key: ValueKey('home-${state.uri.toString()}'),
               child: const HomePage(),
               transitionDuration: const Duration(milliseconds: 200),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
                 return FadeTransition(opacity: animation, child: child);
               },
             ),
@@ -255,11 +281,10 @@ class AppRouter {
           GoRoute(
             path: RouteConstants.menu,
             pageBuilder: (context, state) => CustomTransitionPage(
-              key: state.pageKey,
+              key: ValueKey('menu-${state.uri.toString()}'),
               child: const MenuPage(),
               transitionDuration: const Duration(milliseconds: 200),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
                 return FadeTransition(opacity: animation, child: child);
               },
             ),
@@ -267,11 +292,10 @@ class AppRouter {
           GoRoute(
             path: RouteConstants.cart,
             pageBuilder: (context, state) => CustomTransitionPage(
-              key: state.pageKey,
+              key: ValueKey('cart-${state.uri.toString()}'),
               child: const CartPage(),
               transitionDuration: const Duration(milliseconds: 200),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
                 return FadeTransition(opacity: animation, child: child);
               },
             ),
@@ -279,11 +303,10 @@ class AppRouter {
           GoRoute(
             path: RouteConstants.about,
             pageBuilder: (context, state) => CustomTransitionPage(
-              key: state.pageKey,
+              key: ValueKey('about-${state.uri.toString()}'),
               child: const AboutPage(),
               transitionDuration: const Duration(milliseconds: 200),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
                 return FadeTransition(opacity: animation, child: child);
               },
             ),
@@ -291,11 +314,10 @@ class AppRouter {
           GoRoute(
             path: RouteConstants.account,
             pageBuilder: (context, state) => CustomTransitionPage(
-              key: state.pageKey,
+              key: ValueKey('account-${state.uri.toString()}'),
               child: const AccountPage(),
               transitionDuration: const Duration(milliseconds: 200),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
+              transitionsBuilder: (context, animation, secondaryAnimation, child) {
                 return FadeTransition(opacity: animation, child: child);
               },
             ),
@@ -315,14 +337,16 @@ class AppRouter {
     GoRouterState state,
   ) async {
     final isAuth = authCubit.state is AuthSuccess;
+    final location = state.uri.toString();
 
-    if (isAuth &&
-        [RouteConstants.login, RouteConstants.register]
-            .contains(state.matchedLocation)) {
+    // Prevent redirect loops
+    if (location == RouteConstants.splash) return null;
+
+    if (isAuth && [RouteConstants.login, RouteConstants.register].contains(location)) {
       return RouteConstants.account;
     }
 
-    if (!isAuth && !publicRoutes.contains(state.matchedLocation)) {
+    if (!isAuth && !publicRoutes.contains(location)) {
       return RouteConstants.login;
     }
 
@@ -346,4 +370,3 @@ class GoRouterRefreshStream extends ChangeNotifier {
     super.dispose();
   }
 }
-

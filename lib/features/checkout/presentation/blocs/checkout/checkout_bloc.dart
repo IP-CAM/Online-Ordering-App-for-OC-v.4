@@ -64,6 +64,9 @@ class CheckoutBloc extends Bloc<CheckoutEvent, CheckoutState> {
         _removeReward = removeReward,
         _removeVoucher = removeVoucher,
         super(CheckoutInitial()) {
+    on<CheckoutEvent>((event, emit) {
+      emit(CheckoutLoading());
+    });
     on<ConfirmOrderEvent>(_onConfirmOrderEvent);
     on<FetchPaymentMethodsEvent>(_onFetchPaymentMethodsEvent);
     on<FetchShippingMethodsEvent>(_onFetchShippingMethodsEvent);

@@ -25,12 +25,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:ordering_app/core/constants/urls.dart';
 
 // Connection State Management
-enum ConnectionState {
-  initial,
-  checking,
-  connected,
-  error
-}
+enum ConnectionState { initial, checking, connected, error }
 
 // Connection Check Screen
 class ConnectionCheckScreen extends StatefulWidget {
@@ -46,6 +41,7 @@ class _ConnectionCheckScreenState extends State<ConnectionCheckScreen> {
   String? connectionError;
   Timer? _retryTimer;
   static const int _retryInterval = 5; // seconds
+  bool isOnMaintenance = false;
 
   @override
   void initState() {
@@ -68,10 +64,12 @@ class _ConnectionCheckScreenState extends State<ConnectionCheckScreen> {
     }
 
     try {
-      final List<ConnectivityResult> connectivityResult = await Connectivity().checkConnectivity();
-      
-      if (connectivityResult.isEmpty || 
-          connectivityResult.every((result) => result == ConnectivityResult.none)) {
+      final List<ConnectivityResult> connectivityResult =
+          await Connectivity().checkConnectivity();
+
+      if (connectivityResult.isEmpty ||
+          connectivityResult
+              .every((result) => result == ConnectivityResult.none)) {
         if (mounted) {
           setState(() {
             connectionError = 'No internet connection';
@@ -82,9 +80,25 @@ class _ConnectionCheckScreenState extends State<ConnectionCheckScreen> {
         return;
       }
 
-      final response = await http.get(Uri.parse('${Urls.baseUrl}${Urls.connectionTest}'))
+      final response = await http
+          .get(Uri.parse('${Urls.baseUrl}${Urls.connectionTest}'))
           .timeout(const Duration(seconds: 10));
-      
+
+      if (response.statusCode == 503) {
+        if (mounted) {
+          setState(() {
+            connectionError = 'Under maintenance';
+            connectionState = ConnectionState.error;
+            isOnMaintenance = true;
+          });
+        }
+        return;
+      } else {
+        setState(() {
+          isOnMaintenance = false;
+        });
+      }
+
       if (response.statusCode != 200) {
         if (mounted) {
           setState(() {
@@ -101,7 +115,6 @@ class _ConnectionCheckScreenState extends State<ConnectionCheckScreen> {
           connectionState = ConnectionState.connected;
         });
       }
-      
     } on SocketException {
       if (mounted) {
         setState(() {
@@ -161,7 +174,7 @@ class _ConnectionCheckScreenState extends State<ConnectionCheckScreen> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'Checking connection...',
+                  'Initializing...',
                   style: TextStyle(
                     color: appColors.surfaceLight,
                     fontSize: 16,
@@ -207,27 +220,30 @@ class _ConnectionCheckScreenState extends State<ConnectionCheckScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 10),
-                Text(
-                  'Retrying in $_retryInterval seconds...',
-                  style: TextStyle(
-                    color: appColors.surfaceLight,
-                    fontSize: 14,
+                if (!isOnMaintenance) ...[
+                  const SizedBox(height: 10),
+                  Text(
+                    'Retrying in $_retryInterval seconds...',
+                    style: TextStyle(
+                      color: appColors.surfaceLight,
+                      fontSize: 14,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: checkConnection,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: appColors.surfaceLight,
-                    foregroundColor: appColors.primary,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: checkConnection,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: appColors.surfaceLight,
+                      foregroundColor: appColors.primary,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 12),
+                    ),
+                    child: const Text(
+                      'Retry Now',
+                      style: TextStyle(fontSize: 16),
+                    ),
                   ),
-                  child: const Text(
-                    'Retry Now',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
+                ],
               ],
             ),
           ),

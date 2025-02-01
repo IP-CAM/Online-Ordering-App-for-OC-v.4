@@ -85,7 +85,7 @@ class CartItemCard extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8),
-                      child: item.image != null
+                      child: item.image != null && item.image != ''
                           ? Image.network(
                               item.image!,
                               width: 80,

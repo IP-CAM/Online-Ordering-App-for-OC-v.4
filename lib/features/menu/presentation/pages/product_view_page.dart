@@ -9,6 +9,7 @@ import 'package:ordering_app/core/dependencies/dependencies.dart';
 import 'package:ordering_app/core/utils/helpers.dart';
 import 'package:ordering_app/core/utils/loader.dart';
 import 'package:ordering_app/core/utils/navigation_service.dart';
+import 'package:ordering_app/features/checkout/presentation/blocs/cart/cart_bloc.dart';
 import 'package:ordering_app/features/menu/presentation/blocs/menu/menu_bloc.dart';
 import 'package:ordering_app/features/menu/presentation/widgets/product_images_carousel.dart';
 import 'package:ordering_app/features/menu/presentation/widgets/product_options_selector.dart';
@@ -56,7 +57,7 @@ class _ProductViewPageState extends State<ProductViewPage> {
       for (var option in widget.product.options) {
         final String optionId = option.productOptionId.toString();
 
-        if (selectedOptions.containsKey(optionId) && 
+        if (selectedOptions.containsKey(optionId) &&
             selectedOptions[optionId]!.isNotEmpty) {
           switch (option.type) {
             case 'select':
@@ -81,7 +82,8 @@ class _ProductViewPageState extends State<ProductViewPage> {
               // Handle time string directly without parsing
               final timeStr = selectedOptions[optionId]!.first;
               // Validate time format (HH:mm)
-              if (RegExp(r'^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$').hasMatch(timeStr)) {
+              if (RegExp(r'^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$')
+                  .hasMatch(timeStr)) {
                 // Format to ensure HH:mm
                 final parts = timeStr.split(':');
                 final hour = int.parse(parts[0]).toString().padLeft(2, '0');
@@ -107,7 +109,7 @@ class _ProductViewPageState extends State<ProductViewPage> {
     }
 
     return requestData;
-}
+  }
 
   List<String> _validateRequiredOptions() {
     final List<String> missingOptions = [];
@@ -292,8 +294,11 @@ class _ProductViewPageState extends State<ProductViewPage> {
                         if (state is AddToCartSuccess) {
                           showCustomSnackBar(
                               context: context,
-                              message:( decodeHtmlEntities(state.message)),
+                              message: (decodeHtmlEntities(state.message)),
                               type: SnackBarType.success);
+                          BlocProvider.of<CartBloc>(context)
+                              .add(CartFetchEvent());
+
                           NavigationService.pop(context);
                         }
 
